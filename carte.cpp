@@ -2,16 +2,17 @@
  *  UQAM / Département d'informatique
  *  Hiver 2022
  *  Squelette pour le TP3
-*/
+ */
 
 #include "carte.h"
+
 #include <limits>
 
-void Carte::ajouterLieu(const string& nomlieu, const Coordonnee& c){
+void Carte::ajouterLieu(const string& nomlieu, const Coordonnee& c) {
     // À compléter.
 }
 
-void Carte::ajouterRoute(const string& nomroute, const list<string>& route){
+void Carte::ajouterRoute(const string& nomroute, const list<string>& route) {
     // À compléter.
     // Exemple de ligne dans une carte : «Jeanne-Mance : a b c d ; »
     // Donc, route est une séquence (liste) : <a, b, c, d, e>.
@@ -21,44 +22,41 @@ void Carte::ajouterRoute(const string& nomroute, const list<string>& route){
 }
 
 double Carte::calculerTrajet(const string& nomorigine, const list<string>& nomsdestinations,
-                             std::list<string>& out_cheminnoeuds, std::list<string>& out_cheminroutes) const
-{
-   // À compléter. La version actuelle génère un trajet valide, mais généralement non optimal pour plusieurs destinations.
-   string position = nomorigine;
-   double total = 0;
-   for(list<string>::const_reverse_iterator iter=nomsdestinations.rbegin();iter!=nomsdestinations.rend();++iter){
-       total += calculerChemin(*iter, position, out_cheminnoeuds, out_cheminroutes);
-       position = *iter;
-   }
-   total += calculerChemin(nomorigine, position, out_cheminnoeuds, out_cheminroutes);
-   return total;
+                             std::list<string>& out_cheminnoeuds, std::list<string>& out_cheminroutes) const {
+    // À compléter. La version actuelle génère un trajet valide, mais généralement non optimal pour plusieurs destinations.
+    string position = nomorigine;
+    double total = 0;
+    for (list<string>::const_reverse_iterator iter = nomsdestinations.rbegin(); iter != nomsdestinations.rend(); ++iter) {
+        total += calculerChemin(*iter, position, out_cheminnoeuds, out_cheminroutes);
+        position = *iter;
+    }
+    total += calculerChemin(nomorigine, position, out_cheminnoeuds, out_cheminroutes);
+    return total;
 }
 
 double Carte::calculerChemin(const string& nomorigine, const string& nomdestination,
-                             std::list<string>& out_cheminnoeuds, std::list<string>& out_cheminroutes) const
-{
+                             std::list<string>& out_cheminnoeuds, std::list<string>& out_cheminroutes) const {
     // À compléter.
     return numeric_limits<double>::infinity();
 }
 
 /* Lire une carte. */
-istream& operator >> (istream& is, Carte& carte)
-{
+istream& operator>>(istream& is, Carte& carte) {
     // Lire les lieux
-    while(is){
+    while (is) {
         string nomlieu;
         is >> nomlieu;
-        if(nomlieu == "---") break;
+        if (nomlieu == "---") break;
         Coordonnee coor;
         is >> coor;
         carte.ajouterLieu(nomlieu, coor);
     }
 
     // Lire les routes
-    while(is){
+    while (is) {
         string nomroute;
         is >> nomroute;
-        if(nomroute == "---" || nomroute=="" || !is) break;
+        if (nomroute == "---" || nomroute == "" || !is) break;
 
         char deuxpoints;
         is >> deuxpoints;
@@ -67,18 +65,17 @@ istream& operator >> (istream& is, Carte& carte)
         std::list<std::string> listenomslieux;
 
         string nomlieu;
-        while(is){
-            is>>nomlieu;
-            if(nomlieu==";") break;
-            assert(nomlieu!=":");
-            assert(nomlieu.find(";")==string::npos);
+        while (is) {
+            is >> nomlieu;
+            if (nomlieu == ";") break;
+            assert(nomlieu != ":");
+            assert(nomlieu.find(";") == string::npos);
             listenomslieux.push_back(nomlieu);
         }
 
-        assert(nomlieu==";");
+        assert(nomlieu == ";");
         carte.ajouterRoute(nomroute, listenomslieux);
     }
 
     return is;
 }
-

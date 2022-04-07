@@ -15,6 +15,8 @@
 # 3. Lancer ce script (ex: ../tests/evaluer.sh).
 ##########################################################################
 
+cartes="uqam stejulie montsthilaire victoria montreal"
+
 # Obtenir le chemin du répertoire contenant le présent script et les fichiers tests
 pushd `dirname $0`
 repertoire_tests=`pwd`
@@ -36,11 +38,6 @@ then
     echo "Ce script a été arrêté afin de ne pas écraser les fichiers test_[CDG]*.resultat!"
     exit -2;
 fi
-
-cartes="uqam stejulie montsthilaire victoria montreal"
-if [ ! -z "$1" ]; then cartes="$1"; fi;
-echo "Cartes: $cartes"
-
 
 # Exécutable du programme de validation
 OS=`uname`
@@ -64,8 +61,7 @@ echo "Détection de /usr/bin/time..."
 souslinux=$?
 
 # Fixer les limites : 60 s, 2048Mo mémoire et 128Mo fichier
-#ulimit -t 60 -v 2097152 -f 131072
-ulimit -v 2097152 -f 131072
+ulimit -t 60 -v 2097152 -f 131072
 echo "ulimit (limites courantes des ressources) :"
 ulimit -t -v -f
 echo "-----"
@@ -80,16 +76,6 @@ else
     cpuinfo="?"
 fi
 
-function Nettoyer
-{
-	echo "Nettoyage"
-    # Au cas où le Makefile des étudiants ne ferait pas un «make clean» correctement.
-    make clean
-   
-    rm -f *.o* *.gch tp[1-3][ab] *.resultat *.validation *.png *.eps *.pdf
-    # Au besoin, nettoyer les précédents fichiers logs
-    rm -f log*.txt
-}
 
 ##### Fonction d'évaluation d'un TP ######
 function EvaluerTP
@@ -117,8 +103,8 @@ function EvaluerTP
     taille=`wc *.{c*,h*} | grep total`
     sommaire="$taille"
 
-    # Recompiler
-    make $programme
+    # Ne pas recompiler automatiquement
+    #make $programme
 
     # Vérification de l'existance du programme.
     if [ ! -e ${programme} ]
@@ -233,7 +219,6 @@ for tp in $tps; do
     echo "## CORRECTION : $tp"
     pushd $tp
     	EvaluerTP
-	#Nettoyer
     popd
     #echo -e ">> ${sommaire}"
     echo -e "${tp}\t${sommaire}" >> "rapport-${date}.txt"
