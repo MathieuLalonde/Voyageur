@@ -1,12 +1,12 @@
 /*
-  INF3105 - Structures de données et algorithmes
-  UQAM / Département d'informatique
-  Hiver 2022 / TP3
+    INF3105 - Structures de données et algorithmes
+    UQAM / Département d'informatique
+    Hiver 2022 / TP3
 
-  Squelette de départ. Vous pouvez modifier ce fichier à votre guise.
-  Vous n'êtes pas oubligés de l'utiliser.
+    Squelette de départ. Vous pouvez modifier ce fichier à votre guise.
+    Vous n'êtes pas oubligés de l'utiliser.
 
-  En principe, vous ne devriez pas avoir à modifier la classe Coordonnee.
+    En principe, vous ne devriez pas avoir à modifier la classe Coordonnee.
 */
 
 #if !defined(__COORDONNEE_H__)
