@@ -1,5 +1,7 @@
 # Makefile pour TP3
-# à adapter au besoin
+
+OUTPUT_ZIP_NAME = GEND13119801_LALM14127501.zip
+OUTPUT_PDF_NAME = rapport_GEND13119801_LALM14127501.pdf
 
 OPTIONS = -Wall
 
@@ -30,4 +32,14 @@ clean :
 	rm -f *.o
 	rm -f tp3
 	rm -f *~
+	rm -f *.resultat
 
+zip:
+	make clean
+	rm -f ${OUTPUT_ZIP_NAME}
+	zip -r ${OUTPUT_ZIP_NAME} ${OUTPUT_PDF_NAME} *.h *.cpp Makefile
+
+test:
+	make clean
+	make
+	tests/evaluer.sh

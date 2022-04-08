@@ -17,29 +17,29 @@
 
 using namespace std;
 
-void tp3(Carte& carte, istream& ismissions) {
-    while (ismissions) {
-        string nomlieuaffaire;
-        char deuxpoints = 0;
-        ismissions >> nomlieuaffaire >> deuxpoints;
-        if (!ismissions) break;
-        assert(deuxpoints == ':');
+void tp3(Carte& carte, istream& isMissions) {
+    while (isMissions) {
+        string nomLieuAffaire;
+        char deuxPoints = 0;
+        isMissions >> nomLieuAffaire >> deuxPoints;
+        if (!isMissions) break;
+        assert(deuxPoints == ':');
         list<string> destinations;
-        while (ismissions) {
+        while (isMissions) {
             string destination;
-            ismissions >> destination;  // ne pas ajouter « >> std::std » ici.
-            if (destination == ";" || !ismissions) break;
+            isMissions >> destination;  // ne pas ajouter « >> std::std » ici.
+            if (destination == ";" || !isMissions) break;
             assert(destination.find(";") == string::npos);
             destinations.push_back(destination);
         }
 
-        list<string> chemin_noeuds, chemin_routes;
-        double distance = carte.calculerTrajet(nomlieuaffaire, destinations, chemin_noeuds, chemin_routes);
+        list<string> cheminNoeuds, cheminRoutes;
+        double distance = carte.calculerTrajet(nomLieuAffaire, destinations, cheminNoeuds, cheminRoutes);
 
-        for (list<string>::const_iterator iter = chemin_noeuds.begin(); iter != chemin_noeuds.end(); ++iter)
+        for (list<string>::const_iterator iter = cheminNoeuds.begin(); iter != cheminNoeuds.end(); ++iter)
             cout << *iter << " ";
         cout << endl;
-        for (list<string>::const_iterator iter = chemin_routes.begin(); iter != chemin_routes.end(); ++iter)
+        for (list<string>::const_iterator iter = cheminRoutes.begin(); iter != cheminRoutes.end(); ++iter)
             cout << *iter << " ";
         cout << endl;
         cout << round(distance) << " m" << endl;
@@ -51,6 +51,7 @@ int main(int argc, const char** argv) {
         cout << "Syntaxe: ./tp3 carte.txt [missions.txt]" << endl;
         return 1;
     }
+
     // Lecture de la carte.
     Carte carte;
     {
@@ -61,14 +62,15 @@ int main(int argc, const char** argv) {
         }
         fichiercarte >> carte;
     }
+
     if (argc > 2) {
         // Lecture des missions depuis un fichier.
-        ifstream ismissions(argv[2]);
-        if (ismissions.fail()) {
+        ifstream isMissions(argv[2]);
+        if (isMissions.fail()) {
             cout << "Erreur d'ouverture du fichier : " << argv[2] << endl;
             return 3;
         } else
-            tp3(carte, ismissions);
+            tp3(carte, isMissions);
     } else {
         // Lecture depuis stdin (console).
         tp3(carte, cin);

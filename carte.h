@@ -10,6 +10,8 @@
 
 #include <istream>
 #include <list>
+#include <map>
+//#include <set>
 #include <string>
 
 #include "coordonnee.h"
@@ -27,6 +29,21 @@ class Carte {
                           std::list<string>& out_cheminnoeuds, std::list<string>& out_cheminroutes) const;
 
    private:
+    struct SegRoute;
+
+    struct Lieu {
+        Coordonnee coor;
+        map<string, SegRoute> voisins;
+
+        mutable bool isVisited = false;
+    };
+
+    struct SegRoute {
+        string nom;
+        long longeur;
+    };
+
+    map<string, Lieu> lieux;
     // À compléter.
 
     friend istream& operator>>(istream& is, Carte& carte);
