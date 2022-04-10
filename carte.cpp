@@ -8,6 +8,8 @@
 
 #include <limits>
 
+#include "lieu.h"
+
 using namespace std;
 
 void Carte::ajouterLieu(const string& nomLieu, const Coordonnee& c) {
@@ -17,22 +19,19 @@ void Carte::ajouterLieu(const string& nomLieu, const Coordonnee& c) {
 void Carte::ajouterRoute(const string& nomRoute, const list<string>& route) {
     list<string>::const_iterator iter = route.begin();
 
-    string depart = *iter;
-    Lieu* lieuDepart = &(lieux[depart]);
+    Lieu* lieuDepart = &lieux[*iter];
 
     for (long unsigned int i = 1; i < route.size(); i++) {
-        // Incremente la liste et trouve le nom du lieu d'arrivee
-        advance(iter, 1);
-        string arrivee = *iter;
-        Lieu* lieuArrivee = &(lieux[arrivee]);
+        // Incremente la liste, trouve le lieu d'arrivee
+        ++iter;
+        Lieu* lieuArrivee = &lieux[*iter];
 
         // Ajoute le segment de route courrant et ses infos
-        SegRoute* ajout = &(lieuDepart->voisins[arrivee]);
-        ajout->nom = nomRoute;
-        ajout->longeur = lieuDepart->coor.distance((*lieuArrivee).coor);
+        // TODO: C'est un peu bizard ici, je crois que c'est fait par copie...?
+        Lieu::SegRoute ajout(nomRoute, lieuDepart, lieuArrivee);
+        lieuDepart->voisins.push_back(ajout);
 
         // Le lieu d'arrivee du segment courrant est le depart du prochain segment
-        depart = arrivee;
         lieuDepart = lieuArrivee;
     }
 }

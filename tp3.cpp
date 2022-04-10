@@ -21,19 +21,23 @@ void tp3(Carte& carte, istream& isMissions) {
     while (isMissions) {
         string nomLieuAffaire;
         char deuxPoints = 0;
+
         isMissions >> nomLieuAffaire >> deuxPoints;
         if (!isMissions) break;
         assert(deuxPoints == ':');
+
         list<string> destinations;
+
         while (isMissions) {
             string destination;
-            isMissions >> destination;  // ne pas ajouter « >> std::std » ici.
+            isMissions >> destination;
             if (destination == ";" || !isMissions) break;
             assert(destination.find(";") == string::npos);
             destinations.push_back(destination);
         }
 
-        list<string> cheminNoeuds, cheminRoutes;
+        list<string> cheminNoeuds;
+        list<string> cheminRoutes;
         double distance = carte.calculerTrajet(nomLieuAffaire, destinations, cheminNoeuds, cheminRoutes);
 
         for (list<string>::const_iterator iter = cheminNoeuds.begin(); iter != cheminNoeuds.end(); ++iter)

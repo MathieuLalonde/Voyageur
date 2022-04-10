@@ -6,15 +6,16 @@
 
 #ifndef CARTE_HEADER
 #define CARTE_HEADER
+
 #include <assert.h>
 
 #include <istream>
-#include <list>
 #include <map>
-//#include <set>
 #include <string>
 
 #include "coordonnee.h"
+#include "lieu.h"
+
 using namespace std;
 
 class Carte {
@@ -24,29 +25,15 @@ class Carte {
     void ajouterRoute(const string& nom, const list<string>& noms);
 
     double calculerTrajet(const string& origine, const list<string>& destination,
-                          std::list<string>& out_cheminnoeuds, std::list<string>& out_cheminroutes) const;
+                          list<string>& out_cheminnoeuds, list<string>& out_cheminroutes) const;
     double calculerChemin(const string& origine, const string& destination,
-                          std::list<string>& out_cheminnoeuds, std::list<string>& out_cheminroutes) const;
+                          list<string>& out_cheminnoeuds, list<string>& out_cheminroutes) const;
 
    private:
-    struct SegRoute;
-
-    struct Lieu {
-        Coordonnee coor;
-        map<string, SegRoute> voisins;
-
-        mutable bool isVisited = false;
-    };
-
-    struct SegRoute {
-        string nom;
-        long longeur;
-    };
-
     map<string, Lieu> lieux;
-    // À compléter.
 
     friend istream& operator>>(istream& is, Carte& carte);
+    // friend class ObjetPQ;
 };
 
 #endif

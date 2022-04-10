@@ -11,6 +11,12 @@
             - distance
 
 - Algo graphe pour les distances
+    - Pour les 14 lieux d'une mission:
+        - A* distance vers tous les autres lieux de la mission
+            - est-ce possible de prioriser de rester sur le même chemin?
+        - Sauvegarder les trajets
+    - Recup algo TP2 pour trouver le trajet optimal parmis ceux-là.
+
 - Calcul le resultat
 - Output le resultat
 
