@@ -28,6 +28,10 @@ class Carte {
                           list<string>& out_cheminnoeuds, list<string>& out_cheminroutes) const;
     double calculerChemin(const string& origine, const string& destination,
                           list<string>& out_cheminnoeuds, list<string>& out_cheminroutes) const;
+    double calculerTrajetEntreDeuxDestinations(const Lieu* nomOrigine,
+                                               const Lieu* nomsDestinations,
+                                               std::list<string>& out_cheminNoeuds,
+                                               std::list<string>& out_cheminRoutes) const;
 
    private:
     map<string, Lieu> lieux;

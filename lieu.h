@@ -33,7 +33,7 @@ class Lieu {
 
         string nom;
         // Lieu* depart; // Utiliser au besoin...
-        Lieu* arrivee;
+        const Lieu* arrivee;
         double longueur;
 
        private:
