@@ -8,6 +8,7 @@
 
 #include <algorithm>
 #include <queue>
+#include <limits.h>
 
 #include "lieu.h"
 #include "objetpq.h"
@@ -37,9 +38,10 @@ void Carte::ajouterRoute(const string& nomRoute, const list<string>& route) {
     }
 }
 
-// TODO: try all permutations of nomsDestinations
+// TODO: fix un cas qui marche pas
 double Carte::calculerTrajet(const string& nomOrigine, const list<string>& nomsDestinations,
-                             std::list<string>& out_cheminNoeuds, std::list<string>& out_cheminRoutes) const {
+                             std::list<string>& out_cheminNoeuds, std::list<string>& out_cheminRoutes,
+                            double distanceOptimalCourante) const {
     const Lieu* lieuDepart = &(lieux.find(nomOrigine)->second);
     const Lieu* lieuPrecedent = lieuDepart;
 
@@ -56,6 +58,9 @@ double Carte::calculerTrajet(const string& nomOrigine, const list<string>& nomsD
 
         distanceTotale += distanceAller;
         lieuPrecedent = lieuDest;
+
+        if (distanceOptimalCourante < distanceTotale)
+            return std::numeric_limits<double>::max();
     }
 
     double distanceRetour = calculerTrajetEntreDeuxLieux(lieuDepart, lieuPrecedent, out_cheminNoeuds, out_cheminRoutes);

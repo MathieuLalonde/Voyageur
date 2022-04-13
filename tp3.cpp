@@ -8,10 +8,12 @@
 
 #include <math.h>
 
+#include <bits/stdc++.h>
 #include <fstream>
 #include <iostream>
 #include <list>
 #include <string>
+#include <limits.h>
 
 #include "carte.h"
 
@@ -36,21 +38,33 @@ void tp3(Carte& carte, istream& isMissions) {
             destinations.push_back(destination);
         }
 
-        list<string> cheminNoeuds;
-        list<string> cheminRoutes;
-        string noeudPrecedent = "";
-        double distance = carte.calculerTrajet(nomLieuAffaire, destinations, cheminNoeuds, cheminRoutes);
+        list<string> cheminNoeudsOptimal;
+        list<string> cheminRoutesOptimal;
+        double distanceOptimal = std::numeric_limits<double>::max();
 
-        for (list<string>::const_iterator iter = cheminNoeuds.begin(); iter != cheminNoeuds.end(); ++iter)
+        // Tente de trouver le trajet le plus petit en trouvant les permutations.
+        do {
+            list<string> cheminNoeuds;
+            list<string> cheminRoutes;
+            double distanceTrouver = carte.calculerTrajet(nomLieuAffaire, destinations, cheminNoeuds, cheminRoutes, distanceOptimal);
+            if (distanceOptimal > distanceTrouver) {
+                distanceOptimal = distanceTrouver;
+                cheminNoeudsOptimal = cheminNoeuds;
+                cheminRoutesOptimal = cheminRoutes;
+            }
+        } while (next_permutation(destinations.begin(), destinations.end()));
+
+        string noeudPrecedent = "";
+        for (list<string>::const_iterator iter = cheminNoeudsOptimal.begin(); iter != cheminNoeudsOptimal.end(); ++iter)
             if (noeudPrecedent != *iter) {
                 cout << *iter << " ";
                 noeudPrecedent = *iter;
             }
         cout << endl;
-        for (list<string>::const_iterator iter = cheminRoutes.begin(); iter != cheminRoutes.end(); ++iter)
+        for (list<string>::const_iterator iter = cheminRoutesOptimal.begin(); iter != cheminRoutesOptimal.end(); ++iter)
             cout << *iter << " ";
         cout << endl;
-        cout << round(distance) << " m" << endl;
+        cout << round(distanceOptimal) << " m" << endl;
     }
 }
 

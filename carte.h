@@ -26,7 +26,8 @@ class Carte {
     void ajouterRoute(const string& nom, const list<string>& noms);
 
     double calculerTrajet(const string& origine, const list<string>& destination,
-                          list<string>& out_cheminnoeuds, list<string>& out_cheminroutes) const;
+                          list<string>& out_cheminnoeuds, list<string>& out_cheminroutes,
+                          double distanceOptimalCourante) const;
     double calculerChemin(const string& origine, const string& destination,
                           list<string>& out_cheminnoeuds, list<string>& out_cheminroutes) const;
 

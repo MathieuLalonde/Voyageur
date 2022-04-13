@@ -21,5 +21,5 @@
 - Output le resultat
 
 - Validation des tests & optimisation
-- Rapports
+- Rapports + docstring
 - Validation sur labunix avant remise
