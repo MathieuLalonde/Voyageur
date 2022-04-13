@@ -42,13 +42,13 @@ double Carte::calculerTrajet(const string& nomOrigine, const list<string>& nomsD
 
     double distanceTotale = 0;
 
-    for (const string i : nomsDestinations) {
-        const Lieu* lieuDest = &(lieux.find(i)->second);
+    for (const string nomDestination : nomsDestinations) {
+        const Lieu* lieuDest = &(lieux.find(nomDestination)->second);
 
         double distanceRetour = calculerTrajetEntreDeuxLieux(lieuDest, lieuDepart, out_cheminNoeuds, out_cheminRoutes);
         double distanceAller = calculerTrajetEntreDeuxLieux(lieuDepart, lieuDest, out_cheminNoeuds, out_cheminRoutes);
 
-        distanceTotale = distanceAller + distanceRetour;
+        distanceTotale += distanceAller + distanceRetour;
     }
     return distanceTotale;
 }
