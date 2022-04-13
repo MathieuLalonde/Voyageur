@@ -49,21 +49,6 @@ double Carte::calculerTrajet(const string& nomOrigine, const list<string>& nomsD
         double distanceAller = calculerTrajetEntreDeuxLieux(lieuDepart, lieuDest, out_cheminNoeuds, out_cheminRoutes);
 
         distanceTotale = distanceAller + distanceRetour;
-
-        /*
-        // (Version de la structure de base, à tritre d'exemple...)
-        string position = nomOrigine;
-        double total = 0;
-
-        for (list<string>::const_reverse_iterator iter = nomsDestinations.rbegin(); iter != nomsDestinations.rend(); ++iter) {
-            total += calculerChemin(*iter, position, out_cheminNoeuds, out_cheminRoutes);
-            position = *iter;
-        }
-
-        total += calculerChemin(nomOrigine, position, out_cheminNoeuds, out_cheminRoutes);
-        cout << total << endl;
-        return total;
-        */
     }
     return distanceTotale;
 }
@@ -154,7 +139,6 @@ operator>>(istream& is, Carte& carte) {
         Coordonnee coor;
         is >> coor;
         carte.ajouterLieu(nomLieu, coor);
-        // cout << "Lieu ajouté : " << nomLieu << endl;  // Pour tester
     }
 
     // Lire les routes
@@ -180,7 +164,6 @@ operator>>(istream& is, Carte& carte) {
 
         assert(nomLieu == ";");
         carte.ajouterRoute(nomRoute, listeNomslieux);
-        // cout << "Route ajoutée : " << nomRoute << endl;  // Pour tester
     }
 
     return is;
