@@ -28,7 +28,6 @@ void Carte::ajouterRoute(const string& nomRoute, const list<string>& route) {
         Lieu* lieuArrivee = &lieux[*iter];
 
         // Ajoute le segment de route courrant et ses infos
-        // TODO: C'est un peu bizard ici, je crois que c'est fait par copie...?
         Lieu::SegRoute ajout(nomRoute, lieuDepart, lieuArrivee);
         lieuDepart->voisins.push_back(ajout);
 
