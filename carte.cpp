@@ -39,17 +39,23 @@ void Carte::ajouterRoute(const string& nomRoute, const list<string>& route) {
 double Carte::calculerTrajet(const string& nomOrigine, const list<string>& nomsDestinations,
                              std::list<string>& out_cheminNoeuds, std::list<string>& out_cheminRoutes) const {
     const Lieu* lieuDepart = &(lieux.find(nomOrigine)->second);
+    const Lieu* lieuPrecedent = lieuDepart;
 
     double distanceTotale = 0;
 
     for (const string nomDestination : nomsDestinations) {
         const Lieu* lieuDest = &(lieux.find(nomDestination)->second);
+        double distanceAller = 0;
 
-        double distanceRetour = calculerTrajetEntreDeuxLieux(lieuDest, lieuDepart, out_cheminNoeuds, out_cheminRoutes);
-        double distanceAller = calculerTrajetEntreDeuxLieux(lieuDepart, lieuDest, out_cheminNoeuds, out_cheminRoutes);
+        distanceAller = calculerTrajetEntreDeuxLieux(lieuDest, lieuPrecedent, out_cheminNoeuds, out_cheminRoutes);
 
-        distanceTotale += distanceAller + distanceRetour;
+        distanceTotale += distanceAller;
+        lieuPrecedent = lieuDest;
     }
+
+    double distanceRetour = calculerTrajetEntreDeuxLieux(lieuDepart, lieuPrecedent, out_cheminNoeuds, out_cheminRoutes);
+    distanceTotale += distanceRetour;
+
     return distanceTotale;
 }
 
