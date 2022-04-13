@@ -155,7 +155,7 @@ operator>>(istream& is, Carte& carte) {
         Coordonnee coor;
         is >> coor;
         carte.ajouterLieu(nomLieu, coor);
-        cout << "Lieu ajouté : " << nomLieu << endl;  // Pour tester
+        // cout << "Lieu ajouté : " << nomLieu << endl;  // Pour tester
     }
 
     // Lire les routes
@@ -181,7 +181,7 @@ operator>>(istream& is, Carte& carte) {
 
         assert(nomLieu == ";");
         carte.ajouterRoute(nomRoute, listeNomslieux);
-        cout << "Route ajoutée : " << nomRoute << endl;  // Pour tester
+        // cout << "Route ajoutée : " << nomRoute << endl;  // Pour tester
     }
 
     return is;

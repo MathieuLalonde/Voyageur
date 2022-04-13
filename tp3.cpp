@@ -38,10 +38,14 @@ void tp3(Carte& carte, istream& isMissions) {
 
         list<string> cheminNoeuds;
         list<string> cheminRoutes;
+        string noeudPrecedent = "";
         double distance = carte.calculerTrajet(nomLieuAffaire, destinations, cheminNoeuds, cheminRoutes);
 
         for (list<string>::const_iterator iter = cheminNoeuds.begin(); iter != cheminNoeuds.end(); ++iter)
-            cout << *iter << " ";
+            if (noeudPrecedent != *iter) {
+                cout << *iter << " ";
+                noeudPrecedent = *iter;
+            }
         cout << endl;
         for (list<string>::const_iterator iter = cheminRoutes.begin(); iter != cheminRoutes.end(); ++iter)
             cout << *iter << " ";
