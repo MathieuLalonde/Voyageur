@@ -6,6 +6,7 @@
 
 #include "carte.h"
 
+#include <algorithm>
 #include <queue>
 
 #include "lieu.h"
@@ -36,7 +37,7 @@ void Carte::ajouterRoute(const string& nomRoute, const list<string>& route) {
     }
 }
 
-// TODO: try all permutations
+// TODO: try all permutations of nomsDestinations
 double Carte::calculerTrajet(const string& nomOrigine, const list<string>& nomsDestinations,
                              std::list<string>& out_cheminNoeuds, std::list<string>& out_cheminRoutes) const {
     const Lieu* lieuDepart = &(lieux.find(nomOrigine)->second);
@@ -45,7 +46,8 @@ double Carte::calculerTrajet(const string& nomOrigine, const list<string>& nomsD
     double distanceTotale = 0;
 
     for (const string nomDestination : nomsDestinations) {
-        // TODO: skip if we already parkoured to the node
+        if(std::find(out_cheminNoeuds.begin(), out_cheminNoeuds.end(), nomDestination) != out_cheminNoeuds.end())
+            continue;
 
         const Lieu* lieuDest = &(lieux.find(nomDestination)->second);
         double distanceAller = 0;
