@@ -41,12 +41,15 @@ double Carte::calculerTrajet(const string& nomOrigine, const list<string>& nomsD
                              std::list<string>& out_cheminNoeuds, std::list<string>& out_cheminRoutes) const {
     const Lieu* lieuDepart = &(lieux.find(nomOrigine)->second);
 
+    double distanceTotale = 0;
+
     for (const string i : nomsDestinations) {
-        // double meilleureDistance = numeric_limits<double>::infinity();
         const Lieu* lieuDest = &(lieux.find(i)->second);
 
-        calculerTrajetEntreDeuxLieux(lieuDepart, lieuDest, out_cheminNoeuds, out_cheminRoutes);
-        calculerTrajetEntreDeuxLieux(lieuDest, lieuDepart, out_cheminNoeuds, out_cheminRoutes);
+        double distanceRetour = calculerTrajetEntreDeuxLieux(lieuDest, lieuDepart, out_cheminNoeuds, out_cheminRoutes);
+        double distanceAller = calculerTrajetEntreDeuxLieux(lieuDepart, lieuDest, out_cheminNoeuds, out_cheminRoutes);
+
+        distanceTotale = distanceAller + distanceRetour;
 
         /*
         // (Version de la structure de base, à tritre d'exemple...)
@@ -63,7 +66,7 @@ double Carte::calculerTrajet(const string& nomOrigine, const list<string>& nomsD
         return total;
         */
     }
-    return 0;
+    return distanceTotale;
 }
 
 /*
@@ -86,6 +89,7 @@ double Carte::calculerTrajetEntreDeuxLieux(const Lieu* origine, const Lieu* dest
 
     // Plus court chemin pour arriver a un Lieu donne:
     map<const Lieu*, const Lieu*> precedent;
+    map<const Lieu*, const Lieu::SegRoute*> routePrecedente;
     // Plus courte distance jusqu'a un Lieu donne:
     map<const Lieu*, Infini> gScore;
     // Estime de la meilleure distance vers la destination en passant par un Lieu donne:
@@ -94,11 +98,11 @@ double Carte::calculerTrajetEntreDeuxLieux(const Lieu* origine, const Lieu* dest
     gScore[lieuCourant].value = 0;
 
     list<Lieu::SegRoute>::const_iterator iter;
-    // Tant que la destination n'est pas trouvee, trouve le meilleur chemin vers la destination:
+    // Tant qu'il y a des Lieux dans la queue, trouve le meilleur chemin vers la destination:
     while (!pq.empty()) {
         lieuCourant = pq.top().lieu;
 
-        // Retire le lieuCourant de la liste d'attente:
+        // Retire le lieuCourant de la queue prioritaire:
         pq.pop();
 
         // Boucle a travers tous les voisins:
@@ -115,19 +119,29 @@ double Carte::calculerTrajetEntreDeuxLieux(const Lieu* origine, const Lieu* dest
                 }
 
                 precedent[voisin] = lieuCourant;
+                routePrecedente[voisin] = &(*iter);
                 gScore[voisin].value = distanceCumul;
                 fScore[voisin].value = distanceCumul + segmentCourant.arrivee->coor.distance(destination->coor);
             }
         }
     }
-    // TODO: Garde les distances mais pas les estimes et recommence avec les 13 autres destinations ??
+    // TODO: Recommence avec les 13 autres destinations ??
 
-    // TODO: Faire une fonction qui reconstruit le parcours a partir du map "precedent" et l'output dans
-    // out_cheminNoeuds et out_cheminRoutes.
+    // TODO: Sortir ca en fonction ? :
 
-    cout << gScore[destination].value << " m" << endl;
+    const Lieu* traceRoute = destination;
+    out_cheminNoeuds.push_front(destination->nom);
+    while (traceRoute != origine) {
+        out_cheminNoeuds.push_front(precedent[traceRoute]->nom);
 
-    return 0;
+        string routeActuelle = routePrecedente[traceRoute]->nom;
+        if (routeActuelle != *out_cheminRoutes.begin()) {
+            out_cheminRoutes.push_front(routePrecedente[traceRoute]->nom);
+        }
+        traceRoute = precedent[traceRoute];
+    }
+
+    return gScore[destination].value;
 }
 
 /* Lire une carte. */
