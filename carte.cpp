@@ -36,6 +36,7 @@ void Carte::ajouterRoute(const string& nomRoute, const list<string>& route) {
     }
 }
 
+// TODO: try all permutations
 double Carte::calculerTrajet(const string& nomOrigine, const list<string>& nomsDestinations,
                              std::list<string>& out_cheminNoeuds, std::list<string>& out_cheminRoutes) const {
     const Lieu* lieuDepart = &(lieux.find(nomOrigine)->second);
@@ -44,6 +45,8 @@ double Carte::calculerTrajet(const string& nomOrigine, const list<string>& nomsD
     double distanceTotale = 0;
 
     for (const string nomDestination : nomsDestinations) {
+        // TODO: skip if we already parkoured to the node
+
         const Lieu* lieuDest = &(lieux.find(nomDestination)->second);
         double distanceAller = 0;
 
