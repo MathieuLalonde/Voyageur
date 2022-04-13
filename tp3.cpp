@@ -44,7 +44,7 @@ void tp3(Carte& carte, istream& isMissions) {
         list<string> cheminRoutesOptimal;
         double distanceOptimal = std::numeric_limits<double>::max();
 
-        //TODO: fix les cas qui ne marchent pas encore
+        //TODO: valide avec valideur.cpp pour assurer que tout marche
         // Tente de trouver le trajet le plus petit en trouvant les permutations.
         do {
             list<string> cheminNoeuds;
