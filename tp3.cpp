@@ -38,10 +38,13 @@ void tp3(Carte& carte, istream& isMissions) {
             destinations.push_back(destination);
         }
 
+        destinations.sort(); // Pour next_permutation
+
         list<string> cheminNoeudsOptimal;
         list<string> cheminRoutesOptimal;
         double distanceOptimal = std::numeric_limits<double>::max();
 
+        //TODO: fix les cas qui ne marchent pas encore
         // Tente de trouver le trajet le plus petit en trouvant les permutations.
         do {
             list<string> cheminNoeuds;

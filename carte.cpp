@@ -38,7 +38,6 @@ void Carte::ajouterRoute(const string& nomRoute, const list<string>& route) {
     }
 }
 
-// TODO: fix un cas qui marche pas
 double Carte::calculerTrajet(const string& nomOrigine, const list<string>& nomsDestinations,
                              std::list<string>& out_cheminNoeuds, std::list<string>& out_cheminRoutes,
                             double distanceOptimalCourante) const {
