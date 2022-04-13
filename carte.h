@@ -10,6 +10,7 @@
 #include <assert.h>
 
 #include <istream>
+#include <limits>
 #include <map>
 #include <string>
 
@@ -28,16 +29,23 @@ class Carte {
                           list<string>& out_cheminnoeuds, list<string>& out_cheminroutes) const;
     double calculerChemin(const string& origine, const string& destination,
                           list<string>& out_cheminnoeuds, list<string>& out_cheminroutes) const;
-    double calculerTrajetEntreDeuxDestinations(const Lieu* nomOrigine,
-                                               const Lieu* nomsDestinations,
-                                               std::list<string>& out_cheminNoeuds,
-                                               std::list<string>& out_cheminRoutes) const;
+
+    // A* selon pseudocode https://www.wikiwand.com/en/A*_search_algorithm
+    double calculerTrajetEntreDeuxLieux(const Lieu* nomOrigine,
+                                        const Lieu* nomsDestinations,
+                                        std::list<string>& out_cheminNoeuds,
+                                        std::list<string>& out_cheminRoutes) const;
 
    private:
     map<string, Lieu> lieux;
 
     friend istream& operator>>(istream& is, Carte& carte);
     // friend class ObjetPQ;
+
+    // Struct permetant d'initialiser un map a infini par defaut :
+    struct Infini {
+        double value = numeric_limits<double>::infinity();
+    };
 };
 
 #endif

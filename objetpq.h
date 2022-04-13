@@ -16,7 +16,7 @@
 class ObjetPQ {
    public:
     ObjetPQ();
-    ObjetPQ(const Lieu* lieu, double distanceCumul, double distanceEstimee);
+    ObjetPQ(const Lieu* lieu, double distanceEstimee);
     ~ObjetPQ();
 
     bool operator>(const ObjetPQ& objet) const;
@@ -24,7 +24,7 @@ class ObjetPQ {
     bool operator==(const ObjetPQ& objet) const;
 
     double distanceEstimee;
-    double distanceCumul;
+    // double distanceCumul;
     const Lieu* lieu;
 
    private:
@@ -45,14 +45,14 @@ bool ObjetPQ::operator==(const ObjetPQ& o) const {
 
 ObjetPQ::ObjetPQ() {
     this->distanceEstimee = numeric_limits<double>::infinity();
-    this->distanceCumul = 0;
+    // this->distanceCumul = 0;
     // this->lieu;
     ;
 }
 
-ObjetPQ::ObjetPQ(const Lieu* lieu, double distanceCumul, double distanceEstimee) {
+ObjetPQ::ObjetPQ(const Lieu* lieu, double distanceEstimee) {
     this->distanceEstimee = distanceEstimee;
-    this->distanceCumul = distanceCumul;
+    // this->distanceCumul = distanceCumul;
     this->lieu = lieu;
     ;
 }

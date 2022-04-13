@@ -15,15 +15,22 @@ using namespace std;
 
 class Lieu {
    public:
-    //  Lieu();
+    Lieu();
+    Lieu(string nom, Coordonnee coor);
     //  ~Lieu();
 
+    bool
+    operator>(const Lieu& lieu) const;
+    bool operator<(const Lieu& lieu) const;
+    bool operator==(const Lieu& lieu) const;
+
+    string nom;
     class SegRoute;
 
     Coordonnee coor;
     list<SegRoute> voisins;
 
-    // mutable bool isVisited = false;
+    mutable bool isVisited = false;
 
     class SegRoute {
        public:

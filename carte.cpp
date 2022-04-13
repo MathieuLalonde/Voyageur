@@ -6,7 +6,6 @@
 
 #include "carte.h"
 
-#include <limits>
 #include <queue>
 
 #include "lieu.h"
@@ -15,7 +14,7 @@
 using namespace std;
 
 void Carte::ajouterLieu(const string& nomLieu, const Coordonnee& c) {
-    lieux[nomLieu].coor = c;
+    lieux[nomLieu] = Lieu(nomLieu, c);
 }
 
 void Carte::ajouterRoute(const string& nomRoute, const list<string>& route) {
@@ -45,7 +44,6 @@ double Carte::calculerTrajet(const string& nomOrigine, const list<string>& nomsD
     for (const string i : nomsDestinations) {
         // double meilleureDistance = numeric_limits<double>::infinity();
         const Lieu* lieuDest = &(lieux.find(i)->second);
-        list<string> out_cheminNoeuds, out_cheminRoutes;
 
         calculerTrajetEntreDeuxLieux(lieuDepart, lieuDest, out_cheminNoeuds, out_cheminRoutes);
         calculerTrajetEntreDeuxLieux(lieuDest, lieuDepart, out_cheminNoeuds, out_cheminRoutes);
@@ -79,40 +77,55 @@ double Carte::calculerChemin(const string& nomOrigine, const string& nomDestinat
 double Carte::calculerTrajetEntreDeuxLieux(const Lieu* origine, const Lieu* destination,
                                            std::list<string>& out_cheminNoeuds,
                                            std::list<string>& out_cheminRoutes) const {
-    // double meilleureDistance = numeric_limits<double>::infinity();
-    priority_queue<ObjetPQ, vector<ObjetPQ>, greater<ObjetPQ>> pq;
     double distanceEstimee = origine->coor.distance(destination->coor);
-    pq.push(ObjetPQ(origine, 0, distanceEstimee));
+    priority_queue<ObjetPQ, vector<ObjetPQ>, greater<ObjetPQ>> pq;
+    pq.push(ObjetPQ(origine, distanceEstimee));
 
-    // Lieu* lieuDepart = &(lieux.find(nomOrigine)->second);
-    // Lieu* lieuDest = lieux.find(nomsDestination)->second;
     const Lieu* lieuCourant = origine;
+    // const Lieu* lieuPrecedent = origine;
+
+    // Plus court chemin pour arriver a un Lieu donne:
+    map<const Lieu*, const Lieu*> precedent;
+    // Plus courte distance jusqu'a un Lieu donne:
+    map<const Lieu*, Infini> gScore;
+    // Estime de la meilleure distance vers la destination en passant par un Lieu donne:
+    map<const Lieu*, Infini> fScore;
+
+    gScore[lieuCourant].value = 0;
 
     list<Lieu::SegRoute>::const_iterator iter;
     // Tant que la destination n'est pas trouvee, trouve le meilleur chemin vers la destination:
-    while (lieuCourant != destination) {
+    while (!pq.empty()) {
         lieuCourant = pq.top().lieu;
+
+        // Retire le lieuCourant de la liste d'attente:
+        pq.pop();
+
         // Boucle a travers tous les voisins:
         for (iter = lieuCourant->voisins.begin(); iter != lieuCourant->voisins.end(); ++iter) {
             Lieu::SegRoute segmentCourant = *iter;
+            const Lieu* voisin = segmentCourant.arrivee;
 
-            // TODO: Pourrait l'empècher de retourner sur ses pas avant calculer la distance.
-            // Si lieu précéendent == segmentCourant.arrivee...
+            // Calcule les distances cumulative et estimee:
+            double distanceCumul = gScore[lieuCourant].value + segmentCourant.longueur;
+            if (distanceCumul < gScore[voisin].value) {
+                // Ajoute nouvel objet dans la queue prioritaire s'il est nouveau ou meilleur qu'avant
+                if (distanceCumul < gScore[voisin].value) {
+                    pq.push(ObjetPQ(voisin, distanceEstimee));
+                }
 
-            double distCumul = pq.top().distanceCumul + segmentCourant.longueur;
-            double distanceEstimee = distCumul + segmentCourant.arrivee->coor.distance(destination->coor);
-
-            // Ajoute nouvel objet dans la queue prioritaire
-            pq.push(ObjetPQ(segmentCourant.arrivee, distCumul, distanceEstimee));
-            // cout << "Voisins : " << segmentCourant.nom << " = " << distCumul << endl;  // Pour tester
+                precedent[voisin] = lieuCourant;
+                gScore[voisin].value = distanceCumul;
+                fScore[voisin].value = distanceCumul + segmentCourant.arrivee->coor.distance(destination->coor);
+            }
         }
-        // retire le lieuCourant maintenant que tous ses voisins ont ete visites
-        cout << "While : " << pq.top().distanceCumul << endl;  // Pour tester
-        pq.pop();
     }
-    // garde les distances mais pas les estimes et recommence avec autres destinations ?
+    // TODO: Garde les distances mais pas les estimes et recommence avec les 13 autres destinations ??
 
-    // cout << "Distance : " << test << endl;  // Pour tester
+    // TODO: Faire une fonction qui reconstruit le parcours a partir du map "precedent" et l'output dans
+    // out_cheminNoeuds et out_cheminRoutes.
+
+    cout << gScore[destination].value << " m" << endl;
 
     return 0;
 }
