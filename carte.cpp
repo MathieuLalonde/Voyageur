@@ -68,14 +68,6 @@ double Carte::calculerTrajet(const string& nomOrigine, const list<string>& nomsD
     return distanceTotale;
 }
 
-/*
-double Carte::calculerChemin(const string& nomOrigine, const string& nomDestination,
-                             std::list<string>& out_cheminNoeuds, std::list<string>& out_cheminRoutes) const {
-    // À compléter.
-    return numeric_limits<double>::infinity();
-}
-*/
-
 double Carte::calculerTrajetEntreDeuxLieux(const Lieu* origine, const Lieu* destination,
                                            std::list<string>& out_cheminNoeuds,
                                            std::list<string>& out_cheminRoutes) const {

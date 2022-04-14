@@ -89,7 +89,7 @@ function EvaluerTP
 
 	#echo "Machine : " `hostname`
 	echo "#Machine : " `hostname`  > $logfile
-	#echo "CPU :$cpuinfo" 
+	#echo "CPU :$cpuinfo"
 	echo "#CPU :$cpuinfo"  >> $logfile
 	#echo "Date début : $date"
 	echo "#Date début : $date"  >> $logfile
@@ -119,7 +119,7 @@ function EvaluerTP
     fi
 
 
-	echo 
+	echo
 	echo "#" >> $logfile
 
 	echo -e "Test            \tMiss\tCPU\tMém.(k)\t${entetevalidation}"
@@ -130,7 +130,7 @@ function EvaluerTP
             carte=${carte%-carte.txt}
 	    # Lister les fichiers tests pour le réseau actuel
         tests="`cd $repertoire_tests && ls ${carte}-miss*-*.txt`"
-        
+
         for test in $tests;
         do
             fichiercarte="${repertoire_tests}/${carte}-carte.txt"
@@ -139,16 +139,16 @@ function EvaluerTP
             fichiervalidation="${test%.txt}.validation"
     	    fichiersolution="$repertoire_tests/${test%.txt}.solution"
     	    nbmissions=`cat $fichiertest | wc -l`
-    	    
+
     	    #echo "./$programme $fichiercarte $fichiertest > $fichierresultat"
             if [ $souslinux -eq 0 ]; then
                 tcpu="`(/usr/bin/time -f "%U\t%Mk" ./$programme $fichiercarte $fichiertest > $fichierresultat) 2>&1 | tail -n 1`"
         	else
             	tcpu=`(time -p ./$programme $fichiercarte $fichiertest > $fichierresultat) 2>&1 | egrep user | cut -f 2 -d " "`
             fi
-        
+
         	verif="?"
-        	if ( [ -x ${valideur} ] && [ -e $fichierresultat ] )
+        	if ( [ -e $fichierresultat ] )
 	        then
 	            $valideur $fichiercarte $fichiertest $fichierresultat $fichiersolution > $fichiervalidation
             	verif=`tail -n 1 $fichiervalidation`
@@ -170,7 +170,7 @@ function EvaluerTP
         	sommaire="${sommaire}\t\t${tcpu}\t${verif}"
 
         done
-    
+
 	done
 }
 
@@ -190,26 +190,26 @@ echo >> "rapport-${date}.txt"
 
 # Génération des titres des colonnes
 echo -e -n "#\t\t\t" >> "rapport-${date}.txt"
-for carte in ${cartes}; 
+for carte in ${cartes};
 do
     carte=${carte%-carte.txt}
     tests="`cd $repertoire_tests && ls ${carte}-miss*-*.txt`"
     for test in $tests;
     do
         echo -e -n "$test\t\t\t\t\t\t\t\t\t" >> "rapport-${date}.txt"
-    done        
+    done
 done
 echo >> "rapport-${date}.txt"
 
 echo -e -n "#Soumission\tTaille sources" >> "rapport-${date}.txt"
-for carte in ${cartes}; 
+for carte in ${cartes};
 do
     carte=${carte%-carte.txt}
     tests="`cd $repertoire_tests && ls ${carte}-miss*-*.txt`"
     for test in $tests;
     do
         echo -e -n "\t\tCPU\tMem\t${entetevalidation}" >> "rapport-${date}.txt"
-    done        
+    done
 done
 echo >> "rapport-${date}.txt"
 
