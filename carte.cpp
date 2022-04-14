@@ -79,6 +79,16 @@ double Carte::calculerChemin(const string& nomOrigine, const string& nomDestinat
 double Carte::calculerTrajetEntreDeuxLieux(const Lieu* origine, const Lieu* destination,
                                            std::list<string>& out_cheminNoeuds,
                                            std::list<string>& out_cheminRoutes) const {
+
+    // Valide si le trajet a deja ete calcule
+    double distanceConnu = memoDistances[origine][destination];
+    if (distanceConnu > 0)
+    {
+        out_cheminNoeuds = memoNoeuds[origine][destination];
+        out_cheminRoutes = memoRoutes[origine][destination] ;
+        return distanceConnu;
+    }
+
     double distanceEstimee = origine->coor.distance(destination->coor);
     priority_queue<ObjetPQ, vector<ObjetPQ>, greater<ObjetPQ>> pq;
     pq.push(ObjetPQ(origine, distanceEstimee));
@@ -139,6 +149,11 @@ double Carte::calculerTrajetEntreDeuxLieux(const Lieu* origine, const Lieu* dest
         }
         traceRoute = precedent[traceRoute];
     }
+
+    // Stocker le calcul pour reutiliser plus tard
+    memoDistances[origine][destination] = gScore[destination].value;
+    memoNoeuds[origine][destination] = out_cheminNoeuds;
+    memoRoutes[origine][destination] = out_cheminRoutes;
 
     return gScore[destination].value;
 }

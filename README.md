@@ -1,6 +1,6 @@
 # inf3105-tp3
 
-# TODO:
+# Note:
 
 - Stocker les inputs
     - Map lieu:obj
@@ -17,9 +17,8 @@
         - Sauvegarder les trajets
     - Recup algo TP2 pour trouver le trajet optimal parmis ceux-là.
 
-- Calcul le resultat
-- Output le resultat
 
-- Validation des tests & optimisation
-- Rapports + docstring
+# TODO:
+- Optimisation pour 1 (3pt) & 2+ (1pt bonus)
+- Rapports (output de evaluer.sh) + docstring + clean up code/commentaire
 - Validation sur labunix avant remise
