@@ -34,9 +34,9 @@ class Carte {
     map<string, Lieu> lieux;
 
     // Memoized output of calculerTrajetEntreDeuxLieux
-    mutable map<const Lieu*, map<const Lieu*, double>> memoDistances;
-    mutable map<const Lieu*, map<const Lieu*, std::list<string>>> memoNoeuds;
-    mutable map<const Lieu*, map<const Lieu*, std::list<string>>> memoRoutes;
+    // mutable map<const Lieu*, map<const Lieu*, double>> memoDistances;
+    // mutable map<const Lieu*, map<const Lieu*, std::list<string>>> memoNoeuds;
+    // mutable map<const Lieu*, map<const Lieu*, std::list<string>>> memoRoutes;
 
     // A* selon pseudocode https://www.wikiwand.com/en/A*_search_algorithm
     double calculerTrajetEntreDeuxLieux(const Lieu* nomOrigine,
