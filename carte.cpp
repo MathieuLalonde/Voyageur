@@ -156,6 +156,8 @@ void Carte::calculMeilleurTrajet(const Lieu* lieuDepart,
                 if (distanceParcourue < distanceParcourMin) {
                     calculMeilleurTrajet(voisin->arrivee, trajetsPossibles, nouvelleListe, nouvelleDistanceParcourue,
                                          toursRetants - 1, trajetsParcourMin, distanceParcourMin);
+                } else {
+                    break;
                 }
             }
         }
