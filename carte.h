@@ -25,18 +25,13 @@ class Carte {
     void ajouterLieu(const string& nom, const Coordonnee& c);
     void ajouterRoute(const string& nom, const list<string>& noms);
 
-    double calculerTrajet(const string& origine, const list<string>& destination,
+    double calculerTrajet(const string& origine, const set<string>& destination,
                           list<string>& out_cheminnoeuds, list<string>& out_cheminroutes) const;
-    double calculerChemin(const string& origine, const string& destination,
-                          list<string>& out_cheminnoeuds, list<string>& out_cheminroutes) const;
+    // double calculerChemin(const string& origine, const string& destination,
+    //                       list<string>& out_cheminnoeuds, list<string>& out_cheminroutes) const;
 
    private:
     map<string, Lieu> lieux;
-
-    // Memoized output of calculerTrajetEntreDeuxLieux
-    // mutable map<const Lieu*, map<const Lieu*, double>> memoDistances;
-    // mutable map<const Lieu*, map<const Lieu*, std::list<string>>> memoNoeuds;
-    // mutable map<const Lieu*, map<const Lieu*, std::list<string>>> memoRoutes;
 
     // A* selon pseudocode https://www.wikiwand.com/en/A*_search_algorithm
     double calculerTrajetEntreDeuxLieux(const Lieu* nomOrigine,

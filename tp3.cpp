@@ -26,13 +26,14 @@ void tp3(Carte& carte, istream& ismissions) {
         ismissions >> nomlieuaffaire >> deuxpoints;
         if (!ismissions) break;
         assert(deuxpoints == ':');
-        list<string> destinations;
+        // p.s. En utilisant un set, on elimine les doublons et ca reduit la longeur
+        set<string> destinations;
         while (ismissions) {
             string destination;
             ismissions >> destination;  // ne pas ajouter « >> std::std » ici.
             if (destination == ";" || !ismissions) break;
             assert(destination.find(";") == string::npos);
-            destinations.push_back(destination);
+            destinations.insert(destination);
         }
 
         list<string> chemin_noeuds, chemin_routes;

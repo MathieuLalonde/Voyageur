@@ -40,16 +40,8 @@ void Carte::ajouterRoute(const string& nomRoute, const list<string>& route) {
 }
 
 // Prepare les estimes pour diriger les recherches
-double Carte::calculerTrajet(const string& nomOrigine, const list<string>& nomsDestinations,
+double Carte::calculerTrajet(const string& nomOrigine, const set<string>& destinationsUniques,
                              std::list<string>& out_cheminNoeuds, std::list<string>& out_cheminRoutes) const {
-    // const Lieu* lieuPrecedent = lieuDepart;
-
-    // TODO: Supprimer destinations en double (UQAM F03)
-    set<string> destinationsUniques;
-    for (string nom : nomsDestinations) {
-        destinationsUniques.insert(nom);
-    }
-
     // Cree tableau 2D de toutes les combinaisons de trajets:
     const Lieu* lieuDepart = &(lieux.find(nomOrigine)->second);
     int tailleTableau = destinationsUniques.size() + 1;
