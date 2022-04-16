@@ -34,7 +34,7 @@ class Carte {
     map<string, Lieu> lieux;
 
     // A* selon pseudocode https://www.wikiwand.com/en/A*_search_algorithm
-    double calculerTrajetEntreDeuxLieux(const Lieu* nomOrigine,
+    double calculerCheminEntreDeuxLieux(const Lieu* nomOrigine,
                                         const Lieu* nomsDestinations,
                                         std::list<string>& out_cheminNoeuds,
                                         std::list<string>& out_cheminRoutes) const;
