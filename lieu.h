@@ -19,14 +19,13 @@ class Lieu {
     Lieu(string nom, Coordonnee coor);
     //  ~Lieu();
 
-    bool
-    operator>(const Lieu& lieu) const;
+    bool operator>(const Lieu& lieu) const;
     bool operator<(const Lieu& lieu) const;
     bool operator==(const Lieu& lieu) const;
 
-    string nom;
     class SegRoute;
 
+    string nom;
     Coordonnee coor;
     list<SegRoute> voisins;
 

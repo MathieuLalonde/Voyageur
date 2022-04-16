@@ -16,6 +16,7 @@
 
 #include "coordonnee.h"
 #include "lieu.h"
+#include "trajet.h"
 
 using namespace std;
 
@@ -25,8 +26,7 @@ class Carte {
     void ajouterRoute(const string& nom, const list<string>& noms);
 
     double calculerTrajet(const string& origine, const list<string>& destination,
-                          list<string>& out_cheminnoeuds, list<string>& out_cheminroutes,
-                          double distanceOptimalCourante) const;
+                          list<string>& out_cheminnoeuds, list<string>& out_cheminroutes) const;
     double calculerChemin(const string& origine, const string& destination,
                           list<string>& out_cheminnoeuds, list<string>& out_cheminroutes) const;
 
@@ -43,6 +43,14 @@ class Carte {
                                         const Lieu* nomsDestinations,
                                         std::list<string>& out_cheminNoeuds,
                                         std::list<string>& out_cheminRoutes) const;
+
+    void calculMeilleurTrajet(const Lieu* lieuDepart,
+                              map<const Lieu*, set<Trajet*>> trajetsPossibles,
+                              list<Trajet*> trajetsParcourus,
+                              double distanceParcourue,
+                              int toursRetants,
+                              list<Trajet*>& trajetsParcourMin,
+                              double& distanceParcourMin) const;
 
     friend istream& operator>>(istream& is, Carte& carte);
 

@@ -16,7 +16,7 @@ OPTIONS = -O2 -Wall
 
 all : tp3
 
-tp3: tp3.o carte.o coordonnee.o lieu.o
+tp3: tp3.o carte.o coordonnee.o lieu.o trajet.o
 	g++ $(OPTIONS) -o tp3 tp3.o carte.o coordonnee.o lieu.o
 
 tp3.o: tp3.cpp carte.h coordonnee.h
@@ -30,6 +30,9 @@ coordonnee.o: coordonnee.h coordonnee.cpp
 
 lieu.o: lieu.h lieu.cpp
 	g++ $(OPTIONS) -c -o lieu.o lieu.cpp
+
+trajet.o: trajet.h trajet.cpp
+	g++ $(OPTIONS) -c -o trajet.o trajet.cpp
 
 clean :
 	rm -f *.o

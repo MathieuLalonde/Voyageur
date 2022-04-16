@@ -6,9 +6,10 @@
 
 #include "carte.h"
 
+#include <limits.h>
+
 #include <algorithm>
 #include <queue>
-#include <limits.h>
 
 #include "lieu.h"
 #include "objetpq.h"
@@ -38,49 +39,143 @@ void Carte::ajouterRoute(const string& nomRoute, const list<string>& route) {
     }
 }
 
+// Prepare les estimes pour diriger les recherches
 double Carte::calculerTrajet(const string& nomOrigine, const list<string>& nomsDestinations,
-                             std::list<string>& out_cheminNoeuds, std::list<string>& out_cheminRoutes,
-                            double distanceOptimalCourante) const {
-    const Lieu* lieuDepart = &(lieux.find(nomOrigine)->second);
-    const Lieu* lieuPrecedent = lieuDepart;
+                             std::list<string>& out_cheminNoeuds, std::list<string>& out_cheminRoutes) const {
+    // const Lieu* lieuPrecedent = lieuDepart;
 
-    double distanceTotale = 0;
-
-    for (const string nomDestination : nomsDestinations) {
-        if(std::find(out_cheminNoeuds.begin(), out_cheminNoeuds.end(), nomDestination) != out_cheminNoeuds.end())
-            continue;
-
-        const Lieu* lieuDest = &(lieux.find(nomDestination)->second);
-        double distanceAller = 0;
-
-        distanceAller = calculerTrajetEntreDeuxLieux(lieuDest, lieuPrecedent, out_cheminNoeuds, out_cheminRoutes);
-
-        distanceTotale += distanceAller;
-        lieuPrecedent = lieuDest;
-
-        if (distanceOptimalCourante < distanceTotale)
-            return std::numeric_limits<double>::max();
+    // TODO: Supprimer destinations en double (UQAM F03)
+    set<string> destinationsUniques;
+    for (string nom : nomsDestinations) {
+        destinationsUniques.insert(nom);
     }
 
-    double distanceRetour = calculerTrajetEntreDeuxLieux(lieuDepart, lieuPrecedent, out_cheminNoeuds, out_cheminRoutes);
-    distanceTotale += distanceRetour;
+    // Cree tableau 2D de toutes les combinaisons de trajets:
+    const Lieu* lieuDepart = &(lieux.find(nomOrigine)->second);
+    int tailleTableau = destinationsUniques.size() + 1;
+    Trajet trajets[tailleTableau][tailleTableau];
+    for (int i = 0; i < tailleTableau; i++) {
+        trajets[0][i].depart = lieuDepart;
+        trajets[i][0].arrivee = lieuDepart;
+    }
+    set<string>::const_iterator iter = destinationsUniques.begin();
+    for (int i = 1; i < tailleTableau; i++) {
+        const Lieu* lieuDestination = &(lieux.find(*iter)->second);
+        for (int j = 0; j < tailleTableau; j++) {
+            trajets[i][j].depart = lieuDestination;
+            trajets[j][i].arrivee = lieuDestination;
+        }
+        iter++;
+    }
 
-    return distanceTotale;
+    map<const Lieu*, set<Trajet*>> trajetsPossibles;
+
+    // calcule toutes les distances a vol d'oiseau:
+    for (int i = 0; i < tailleTableau; i++) {
+        for (int j = i + 1; j < tailleTableau; j++) {
+            if (i != j) {
+                trajets[j][i].distanceEstimee = trajets[i][j].distanceEstimee =
+                    trajets[i][j].depart->coor.distance(trajets[i][j].arrivee->coor);
+
+                trajetsPossibles[trajets[i][j].depart].insert(&trajets[i][j]);
+                trajetsPossibles[trajets[j][i].depart].insert(&trajets[j][i]);
+            }
+        }
+    }
+    list<Trajet*> trajetsParcourus;
+    double distanceParcourue = 0;
+    int toursRetants = destinationsUniques.size();
+    list<Trajet*> trajetsParcourMin;
+    double distanceParcourMin = numeric_limits<double>::infinity();
+    // Calcule toutes les permutations avec ces chiffres-la:
+    calculMeilleurTrajet(lieuDepart, trajetsPossibles, trajetsParcourus, distanceParcourue, toursRetants,
+                         trajetsParcourMin, distanceParcourMin);
+
+    string noeudPrecedent = "";
+    string routePrecedente = "";
+    for (Trajet* trajet : trajetsParcourMin) {
+        for (string lieu : trajet->out_cheminNoeuds) {
+            if (lieu != noeudPrecedent) {
+                out_cheminNoeuds.push_back(lieu);
+                noeudPrecedent = lieu;
+            }
+        }
+        for (string route : trajet->out_cheminRoutes) {
+            if (route != routePrecedente) {
+                out_cheminRoutes.push_back(route);
+                routePrecedente = route;
+            }
+        }
+    }
+
+    return distanceParcourMin;
 }
 
+// Calcul recursif des meilleurs combinaisons de trajets
+void Carte::calculMeilleurTrajet(const Lieu* lieuDepart,
+                                 map<const Lieu*, set<Trajet*>> trajetsPossibles,
+                                 list<Trajet*> trajetsParcourus,
+                                 double distanceParcourue,
+                                 int toursRetants,
+                                 list<Trajet*>& trajetsParcourMin,
+                                 double& distanceParcourMin) const {
+    if (toursRetants == 0) {
+        const Lieu* origine = (*trajetsParcourus.begin())->depart;
+
+        for (Trajet* voisin : trajetsPossibles[lieuDepart]) {
+            if (voisin->arrivee == origine) {
+                if (voisin->distanceReele < 0) {
+                    voisin->distanceReele = calculerTrajetEntreDeuxLieux(voisin->depart, voisin->arrivee,
+                                                                         voisin->out_cheminNoeuds,
+                                                                         voisin->out_cheminRoutes);
+                }
+                if (distanceParcourue + voisin->distanceReele < distanceParcourMin) {
+                    trajetsParcourus.push_back(voisin);
+                    distanceParcourue += voisin->distanceReele;
+
+                    trajetsParcourMin = trajetsParcourus;
+                    distanceParcourMin = distanceParcourue;
+                }
+                break;
+            }
+        }
+
+    } else {
+        // TODO: a tester
+        for (Trajet* voisin : trajetsPossibles[lieuDepart]) {
+            bool dejaVisite = false;
+            for (Trajet* trajet : trajetsParcourus) {
+                if (voisin->arrivee == trajet->arrivee || voisin->arrivee == trajet->depart) {
+                    dejaVisite = true;
+                    break;
+                }
+            }
+            if (!dejaVisite) {
+                if (voisin->distanceReele < 0) {
+                    voisin->distanceReele = calculerTrajetEntreDeuxLieux(voisin->depart, voisin->arrivee,
+                                                                         voisin->out_cheminNoeuds,
+                                                                         voisin->out_cheminRoutes);
+                }
+                list<Trajet*> nouvelleListe = trajetsParcourus;
+                nouvelleListe.push_back(voisin);
+                double nouvelleDistanceParcourue = distanceParcourue;
+                nouvelleDistanceParcourue += voisin->distanceReele;
+
+                if (distanceParcourue < distanceParcourMin) {
+                    calculMeilleurTrajet(voisin->arrivee, trajetsPossibles, nouvelleListe, nouvelleDistanceParcourue,
+                                         toursRetants - 1, trajetsParcourMin, distanceParcourMin);
+                }
+            }
+        }
+    }
+
+    // retourne distance du parcoours minimum et son parcours
+}
+
+// Calcul trajet entre deux points sur les routes de la carte
 double Carte::calculerTrajetEntreDeuxLieux(const Lieu* origine, const Lieu* destination,
                                            std::list<string>& out_cheminNoeuds,
                                            std::list<string>& out_cheminRoutes) const {
-
-    // Valide si le trajet a deja ete calcule
-   /* double distanceConnu = memoDistances[origine][destination];
-    if (distanceConnu > 0)
-    {
-        out_cheminNoeuds = memoNoeuds[origine][destination];
-        out_cheminRoutes = memoRoutes[origine][destination] ;
-        return distanceConnu;
-    }*/
-
     double distanceEstimee = origine->coor.distance(destination->coor);
     priority_queue<ObjetPQ, vector<ObjetPQ>, greater<ObjetPQ>> pq;
     pq.push(ObjetPQ(origine, distanceEstimee));
@@ -126,10 +221,8 @@ double Carte::calculerTrajetEntreDeuxLieux(const Lieu* origine, const Lieu* dest
             }
         }
     }
-    // TODO: Recommence avec les 13 autres destinations ??
 
-    // TODO: Sortir ca en fonction ? :
-
+    // Traverse precedent pour retrouver le trajet utilise:
     const Lieu* traceRoute = destination;
     out_cheminNoeuds.push_front(destination->nom);
     while (traceRoute != origine) {
@@ -141,11 +234,6 @@ double Carte::calculerTrajetEntreDeuxLieux(const Lieu* origine, const Lieu* dest
         }
         traceRoute = precedent[traceRoute];
     }
-
-    // Stocker le calcul pour reutiliser plus tard
-/*memoDistances[origine][destination] = gScore[destination].value;
-    memoNoeuds[origine][destination] = out_cheminNoeuds;
-    memoRoutes[origine][destination] = out_cheminRoutes;*/
 
     return gScore[destination].value;
 }

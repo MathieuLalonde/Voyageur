@@ -6,70 +6,99 @@
         Mathieu Lalonde LALM14127501
 */
 
+#include <bits/stdc++.h>
+#include <limits.h>
 #include <math.h>
 
-#include <bits/stdc++.h>
 #include <fstream>
 #include <iostream>
 #include <list>
 #include <string>
-#include <limits.h>
 
 #include "carte.h"
 
 using namespace std;
 
-void tp3(Carte& carte, istream& isMissions) {
-    while (isMissions) {
-        string nomLieuAffaire;
-        char deuxPoints = 0;
-
-        isMissions >> nomLieuAffaire >> deuxPoints;
-        if (!isMissions) break;
-        assert(deuxPoints == ':');
-
+void tp3(Carte& carte, istream& ismissions) {
+    while (ismissions) {
+        string nomlieuaffaire;
+        char deuxpoints = 0;
+        ismissions >> nomlieuaffaire >> deuxpoints;
+        if (!ismissions) break;
+        assert(deuxpoints == ':');
         list<string> destinations;
-
-        while (isMissions) {
+        while (ismissions) {
             string destination;
-            isMissions >> destination;
-            if (destination == ";" || !isMissions) break;
+            ismissions >> destination;  // ne pas ajouter « >> std::std » ici.
+            if (destination == ";" || !ismissions) break;
             assert(destination.find(";") == string::npos);
             destinations.push_back(destination);
         }
 
-        destinations.sort(); // Pour next_permutation
+        list<string> chemin_noeuds, chemin_routes;
+        double distance = carte.calculerTrajet(nomlieuaffaire, destinations, chemin_noeuds, chemin_routes);
 
-        list<string> cheminNoeudsOptimal;
-        list<string> cheminRoutesOptimal;
-        double distanceOptimal = std::numeric_limits<double>::max();
-
-        //TODO: valide avec valideur.cpp pour assurer que tout marche
-        // Tente de trouver le trajet le plus petit en trouvant les permutations.
-        do {
-            list<string> cheminNoeuds;
-            list<string> cheminRoutes;
-            double distanceTrouver = carte.calculerTrajet(nomLieuAffaire, destinations, cheminNoeuds, cheminRoutes, distanceOptimal);
-            if (distanceOptimal > distanceTrouver) {
-                distanceOptimal = distanceTrouver;
-                cheminNoeudsOptimal = cheminNoeuds;
-                cheminRoutesOptimal = cheminRoutes;
-            }
-        } while (next_permutation(destinations.begin(), destinations.end()));
-
-        string noeudPrecedent = "";
-        for (list<string>::const_iterator iter = cheminNoeudsOptimal.begin(); iter != cheminNoeudsOptimal.end(); ++iter)
-            if (noeudPrecedent != *iter) {
-                cout << *iter << " ";
-                noeudPrecedent = *iter;
-            }
-        cout << endl;
-        for (list<string>::const_iterator iter = cheminRoutesOptimal.begin(); iter != cheminRoutesOptimal.end(); ++iter)
+        for (list<string>::const_iterator iter = chemin_noeuds.begin(); iter != chemin_noeuds.end(); ++iter)
             cout << *iter << " ";
         cout << endl;
-        cout << round(distanceOptimal) << " m" << endl;
+        for (list<string>::const_iterator iter = chemin_routes.begin(); iter != chemin_routes.end(); ++iter)
+            cout << *iter << " ";
+        cout << endl;
+        cout << round(distance) << " m" << endl;
     }
 }
+
+// void tp3(Carte& carte, istream& isMissions) {
+//     while (isMissions) {
+//         string nomLieuAffaire;
+//         char deuxPoints = 0;
+
+//         isMissions >> nomLieuAffaire >> deuxPoints;
+//         if (!isMissions) break;
+//         assert(deuxPoints == ':');
+
+//         list<string> destinations;
+
+//         while (isMissions) {
+//             string destination;
+//             isMissions >> destination;
+//             if (destination == ";" || !isMissions) break;
+//             assert(destination.find(";") == string::npos);
+//             destinations.push_back(destination);
+//         }
+
+//         destinations.sort(); // Pour next_permutation
+
+//         list<string> cheminNoeudsOptimal;
+//         list<string> cheminRoutesOptimal;
+//         double distanceOptimal = std::numeric_limits<double>::max();
+
+//         //TODO: valide avec valideur.cpp pour assurer que tout marche
+//         // Tente de trouver le trajet le plus petit en trouvant les permutations.
+//         do {
+//             list<string> cheminNoeuds;
+//             list<string> cheminRoutes;
+//             double distanceTrouver = carte.calculerTrajet(nomLieuAffaire, destinations, cheminNoeuds, cheminRoutes, distanceOptimal);
+//             if (distanceOptimal > distanceTrouver) {
+//                 distanceOptimal = distanceTrouver;
+//                 cheminNoeudsOptimal = cheminNoeuds;
+//                 cheminRoutesOptimal = cheminRoutes;
+//             }
+//         } while (next_permutation(destinations.begin(), destinations.end()));
+
+//         string noeudPrecedent = "";
+//         for (list<string>::const_iterator iter = cheminNoeudsOptimal.begin(); iter != cheminNoeudsOptimal.end(); ++iter)
+//             if (noeudPrecedent != *iter) {
+//                 cout << *iter << " ";
+//                 noeudPrecedent = *iter;
+//             }
+//         cout << endl;
+//         for (list<string>::const_iterator iter = cheminRoutesOptimal.begin(); iter != cheminRoutesOptimal.end(); ++iter)
+//             cout << *iter << " ";
+//         cout << endl;
+//         cout << round(distanceOptimal) << " m" << endl;
+//     }
+// }
 
 int main(int argc, const char** argv) {
     if (argc <= 1 || argc > 3) {

@@ -11,7 +11,6 @@
 #include <iostream>
 
 #include "lieu.h"
-#include "objetpq.h"
 
 class ObjetPQ {
    public:
@@ -24,11 +23,9 @@ class ObjetPQ {
     bool operator==(const ObjetPQ& objet) const;
 
     double distanceEstimee;
-    // double distanceCumul;
     const Lieu* lieu;
 
    private:
-    // list<Lieu*> cheminJusquIci;
 };
 
 bool ObjetPQ::operator<(const ObjetPQ& o) const {
@@ -45,14 +42,11 @@ bool ObjetPQ::operator==(const ObjetPQ& o) const {
 
 ObjetPQ::ObjetPQ() {
     this->distanceEstimee = numeric_limits<double>::infinity();
-    // this->distanceCumul = 0;
-    // this->lieu;
     ;
 }
 
 ObjetPQ::ObjetPQ(const Lieu* lieu, double distanceEstimee) {
     this->distanceEstimee = distanceEstimee;
-    // this->distanceCumul = distanceCumul;
     this->lieu = lieu;
     ;
 }
