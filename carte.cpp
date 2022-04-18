@@ -77,12 +77,12 @@ double Carte::calculerTrajet(const string& nomOrigine, const set<string>& destin
     }
     list<Trajet*> trajetsParcourus;
     double distanceParcourue = 0;
-    int toursRetants = destinationsUniques.size();
+    int toursRestants = destinationsUniques.size();
     list<Trajet*> trajetsParcourMin;
     double distanceParcourMin = numeric_limits<double>::infinity();
 
     // Calcule toutes les permutations avec ces chiffres-la:
-    calculMeilleurTrajet(lieuOrigine, trajetsPossibles, trajetsParcourus, distanceParcourue, toursRetants,
+    calculMeilleurTrajet(lieuOrigine, trajetsPossibles, trajetsParcourus, distanceParcourue, toursRestants,
                          trajetsParcourMin, distanceParcourMin);
 
     // Recupere et assemble les directives de parcours:
@@ -111,10 +111,10 @@ void Carte::calculMeilleurTrajet(const Lieu* lieuDepart,
                                  map<const Lieu*, set<Trajet*>> trajetsPossibles,
                                  list<Trajet*> trajetsParcourus,
                                  double distanceParcourue,
-                                 int toursRetants,
+                                 int toursRestants,
                                  list<Trajet*>& trajetsParcourMin,
                                  double& distanceParcourMin) const {
-    if (toursRetants == 0) {
+    if (toursRestants == 0) {
         const Lieu* origine = (*trajetsParcourus.begin())->depart;
 
         for (Trajet* voisin : trajetsPossibles[lieuDepart]) {
@@ -158,7 +158,7 @@ void Carte::calculMeilleurTrajet(const Lieu* lieuDepart,
 
                 if (distanceParcourue < distanceParcourMin) {
                     calculMeilleurTrajet(voisin->arrivee, trajetsPossibles, nouvelleListe, nouvelleDistanceParcourue,
-                                         toursRetants - 1, trajetsParcourMin, distanceParcourMin);
+                                         toursRestants - 1, trajetsParcourMin, distanceParcourMin);
                 } else {
                     break;
                 }

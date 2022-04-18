@@ -4,3 +4,6 @@
 tp3
 ./*.txt
 valideur*
+*.txt
+*.validation
+*.resultat
