@@ -40,6 +40,11 @@ clean :
 	rm -f *~
 	rm -f *.resultat
 
+clean-tests:
+	rm -f *.txt
+	rm -f *.resultat
+	rm -f *.validation
+
 zip:
 	make clean
 	rm -f ${OUTPUT_ZIP_NAME}
