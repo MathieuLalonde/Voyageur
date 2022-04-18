@@ -191,12 +191,19 @@ double Carte::calculerCheminEntreDeuxLieux(const Lieu* origine, const Lieu* dest
     gScore[lieuCourant].value = 0;
 
     list<Lieu::SegRoute>::const_iterator iter;
+    double nb = 0;
     // Tant qu'il y a des Lieux dans la queue, trouve le meilleur chemin vers la destination:
     while (!pq.empty()) {
-        lieuCourant = pq.top().lieu;
-
+        ObjetPQ pqObjetCourant = pq.top();
+        lieuCourant = pqObjetCourant.lieu;
+        nb++;
         // Retire le lieuCourant de la queue prioritaire:
         pq.pop();
+
+        // On arrete de checker si on a deja un meilleur chemin
+        if (pqObjetCourant.distanceEstimee > gScore[destination].value) {
+            break;
+        }
 
         // Boucle a travers tous les voisins:
         for (iter = lieuCourant->voisins.begin(); iter != lieuCourant->voisins.end(); ++iter) {
@@ -219,6 +226,8 @@ double Carte::calculerCheminEntreDeuxLieux(const Lieu* origine, const Lieu* dest
             }
         }
     }
+
+    // cout << "LOOPED: " << nb << endl;
 
     // Traverse precedent pour retrouver le trajet utilise:
     const Lieu* traceRoute = destination;
