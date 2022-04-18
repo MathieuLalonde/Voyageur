@@ -27,9 +27,6 @@ class Carte {
 
     double calculerTrajet(const string& origine, const set<string>& destination,
                           list<string>& out_cheminnoeuds, list<string>& out_cheminroutes) const;
-    // double calculerChemin(const string& origine, const string& destination,
-    //                       list<string>& out_cheminnoeuds, list<string>& out_cheminroutes) const;
-
    private:
     map<string, Lieu> lieux;
 

@@ -49,58 +49,6 @@ void tp3(Carte& carte, istream& ismissions) {
     }
 }
 
-// void tp3(Carte& carte, istream& isMissions) {
-//     while (isMissions) {
-//         string nomLieuAffaire;
-//         char deuxPoints = 0;
-
-//         isMissions >> nomLieuAffaire >> deuxPoints;
-//         if (!isMissions) break;
-//         assert(deuxPoints == ':');
-
-//         list<string> destinations;
-
-//         while (isMissions) {
-//             string destination;
-//             isMissions >> destination;
-//             if (destination == ";" || !isMissions) break;
-//             assert(destination.find(";") == string::npos);
-//             destinations.push_back(destination);
-//         }
-
-//         destinations.sort(); // Pour next_permutation
-
-//         list<string> cheminNoeudsOptimal;
-//         list<string> cheminRoutesOptimal;
-//         double distanceOptimal = std::numeric_limits<double>::max();
-
-//         //TODO: valide avec valideur.cpp pour assurer que tout marche
-//         // Tente de trouver le trajet le plus petit en trouvant les permutations.
-//         do {
-//             list<string> cheminNoeuds;
-//             list<string> cheminRoutes;
-//             double distanceTrouver = carte.calculerTrajet(nomLieuAffaire, destinations, cheminNoeuds, cheminRoutes, distanceOptimal);
-//             if (distanceOptimal > distanceTrouver) {
-//                 distanceOptimal = distanceTrouver;
-//                 cheminNoeudsOptimal = cheminNoeuds;
-//                 cheminRoutesOptimal = cheminRoutes;
-//             }
-//         } while (next_permutation(destinations.begin(), destinations.end()));
-
-//         string noeudPrecedent = "";
-//         for (list<string>::const_iterator iter = cheminNoeudsOptimal.begin(); iter != cheminNoeudsOptimal.end(); ++iter)
-//             if (noeudPrecedent != *iter) {
-//                 cout << *iter << " ";
-//                 noeudPrecedent = *iter;
-//             }
-//         cout << endl;
-//         for (list<string>::const_iterator iter = cheminRoutesOptimal.begin(); iter != cheminRoutesOptimal.end(); ++iter)
-//             cout << *iter << " ";
-//         cout << endl;
-//         cout << round(distanceOptimal) << " m" << endl;
-//     }
-// }
-
 int main(int argc, const char** argv) {
     if (argc <= 1 || argc > 3) {
         cout << "Syntaxe: ./tp3 carte.txt [missions.txt]" << endl;

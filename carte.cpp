@@ -20,6 +20,7 @@ void Carte::ajouterLieu(const string& nomLieu, const Coordonnee& c) {
     lieux[nomLieu] = Lieu(nomLieu, c);
 }
 
+// TODO: serait possible de stocker une route sous plusieurs tailles et que l'algo favorise le chemin le plus long qui mene plus loin en premier? Aussi, reduire la carte pour les noeuds qui on juste 1/2 liens (qui ne sont pas des intersections)
 void Carte::ajouterRoute(const string& nomRoute, const list<string>& route) {
     list<string>::const_iterator iter = route.begin();
 
@@ -31,8 +32,8 @@ void Carte::ajouterRoute(const string& nomRoute, const list<string>& route) {
         Lieu* lieuArrivee = &lieux[*iter];
 
         // Ajoute le segment de route courrant et ses infos
-        Lieu::SegRoute ajout(nomRoute, lieuDepart, lieuArrivee);
-        lieuDepart->voisins.push_back(ajout);
+        Lieu::SegRoute nouveauSegment(nomRoute, lieuDepart, lieuArrivee);
+        lieuDepart->voisins.push_back(nouveauSegment);
 
         // Le lieu d'arrivee du segment courrant est le depart du prochain segment
         lieuDepart = lieuArrivee;

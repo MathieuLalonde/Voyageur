@@ -13,6 +13,7 @@
 
 #include "lieu.h"
 
+// TODO: rendre les trucs private si pertinent
 class Trajet {
    public:
     const Lieu* depart;
