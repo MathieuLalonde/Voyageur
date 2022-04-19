@@ -189,7 +189,6 @@ double Carte::calculerCheminEntreDeuxLieux(const Lieu* origine, const Lieu* dest
     map<const Lieu*, Infini> fScore;
 
     gScore[lieuCourant].value = 0;
-    //fScore[lieuCourant].value = lieuCourant->coor.distance(destination->coor);;
 
     list<Lieu::SegRoute>::const_iterator iter;
     double nb = 0;
@@ -221,7 +220,6 @@ double Carte::calculerCheminEntreDeuxLieux(const Lieu* origine, const Lieu* dest
                 precedent[voisin] = lieuCourant;
                 routePrecedente[voisin] = &(*iter);
                 gScore[voisin].value = distanceCumul;
-                //fScore[voisin].value = distanceCumul + segmentCourant.arrivee->coor.distance(destination->coor);
             }
         }
     }
