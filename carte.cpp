@@ -214,11 +214,9 @@ double Carte::calculerCheminEntreDeuxLieux(const Lieu* origine, const Lieu* dest
             double distanceCumul = gScore[lieuCourant].value + segmentCourant.longueur;
             if (distanceCumul < gScore[voisin].value) {
                 // Ajoute nouvel objet dans la queue prioritaire s'il est nouveau ou meilleur qu'avant
-                if (distanceCumul < gScore[voisin].value) {
-                    distanceEstimee = voisin->coor.distance(destination->coor);
-                    pq.push(ObjetPQ(voisin, distanceEstimee));
-                }
-
+                distanceEstimee = voisin->coor.distance(destination->coor);
+                pq.push(ObjetPQ(voisin, distanceEstimee));
+                // Calcul des scores
                 precedent[voisin] = lieuCourant;
                 routePrecedente[voisin] = &(*iter);
                 gScore[voisin].value = distanceCumul;
