@@ -27,18 +27,26 @@ class ObjetPQ {
     const Lieu* lieu;
 
    private:
+    double poidRestant = 0.1;
+    double poidFait = 1;
 };
 
 bool ObjetPQ::operator<(const ObjetPQ& o) const {
-    return (this->distanceRestanteEstimee < o.distanceRestanteEstimee);
+    double thisPoid = this->distanceRestanteEstimee * poidRestant + this->distanceEstimee * poidFait;
+    double otherPoid = o.distanceRestanteEstimee * poidRestant + o.distanceEstimee * poidFait;
+    return (thisPoid < otherPoid);
 }
 
 bool ObjetPQ::operator>(const ObjetPQ& o) const {
-    return (this->distanceRestanteEstimee > o.distanceRestanteEstimee);
+    double thisPoid = this->distanceRestanteEstimee * poidRestant + this->distanceEstimee * poidFait;
+    double otherPoid = o.distanceRestanteEstimee * poidRestant + o.distanceEstimee * poidFait;
+    return (thisPoid > otherPoid);
 }
 
 bool ObjetPQ::operator==(const ObjetPQ& o) const {
-    return (this->distanceRestanteEstimee == o.distanceRestanteEstimee);
+    double thisPoid = this->distanceRestanteEstimee * poidRestant + this->distanceEstimee * poidFait;
+    double otherPoid = o.distanceRestanteEstimee * poidRestant + o.distanceEstimee * poidFait;
+    return (thisPoid == otherPoid);
 }
 
 ObjetPQ::ObjetPQ() {
