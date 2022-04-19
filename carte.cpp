@@ -25,15 +25,20 @@ void Carte::ajouterRoute(const string& nomRoute, const list<string>& route) {
     list<string>::const_iterator iter = route.begin();
 
     Lieu* lieuDepart = &lieux[*iter];
+    // Lieu *lieuFin = &lieux[route.back()];
 
     for (long unsigned int i = 1; i < route.size(); i++) {
         // Incremente la liste, trouve le lieu d'arrivee
         ++iter;
         Lieu* lieuArrivee = &lieux[*iter];
 
-        // Ajoute le segment de route courrant et ses infos
+        // Ajoute le segment de route courrant et ses infos (le plus petit)
         Lieu::SegRoute nouveauSegment(nomRoute, lieuDepart, lieuArrivee);
         lieuDepart->voisins.push_back(nouveauSegment);
+
+        // // Ajoute un autoroute (le point courant jusqua la fin de la rue) WARNING! Not complete, requires storing mid nodes and extracting them for the answer.
+        // Lieu::SegRoute nouveauAutoroute(nomRoute, lieuDepart, lieuFin);
+        // lieuDepart->voisins.push_back(nouveauAutoroute);
 
         // Le lieu d'arrivee du segment courrant est le depart du prochain segment
         lieuDepart = lieuArrivee;
@@ -136,7 +141,6 @@ void Carte::calculMeilleurTrajet(const Lieu* lieuDepart,
         }
 
     } else {
-        // TODO: a tester
         for (Trajet* voisin : trajetsPossibles[lieuDepart]) {
             bool dejaVisite = false;
             for (Trajet* trajet : trajetsParcourus) {
@@ -191,12 +195,12 @@ double Carte::calculerCheminEntreDeuxLieux(const Lieu* origine, const Lieu* dest
     gScore[lieuCourant].value = 0;
 
     list<Lieu::SegRoute>::const_iterator iter;
-    double nb = 0;
+    // double nb = 0;
     // Tant qu'il y a des Lieux dans la queue, trouve le meilleur chemin vers la destination:
     while (!pq.empty()) {
         ObjetPQ pqObjetCourant = pq.top();
         lieuCourant = pqObjetCourant.lieu;
-        nb++;
+        // nb++;
         // Retire le lieuCourant de la queue prioritaire:
         pq.pop();
 
@@ -224,6 +228,8 @@ double Carte::calculerCheminEntreDeuxLieux(const Lieu* origine, const Lieu* dest
             }
         }
     }
+
+    // cout << "LOOPED: " << nb << endl;
 
     // Traverse precedent pour retrouver le trajet utilise:
     const Lieu* traceRoute = destination;
