@@ -15,13 +15,14 @@
 class ObjetPQ {
    public:
     ObjetPQ();
-    ObjetPQ(const Lieu* lieu, double distanceEstimee);
+    ObjetPQ(const Lieu* lieu, double distanceEstimee, double distanceRestanteEstimee);
     ~ObjetPQ();
 
     bool operator>(const ObjetPQ& objet) const;
     bool operator<(const ObjetPQ& objet) const;
     bool operator==(const ObjetPQ& objet) const;
 
+    double distanceRestanteEstimee;
     double distanceEstimee;
     const Lieu* lieu;
 
@@ -29,24 +30,27 @@ class ObjetPQ {
 };
 
 bool ObjetPQ::operator<(const ObjetPQ& o) const {
-    return (this->distanceEstimee < o.distanceEstimee);
+    return (this->distanceRestanteEstimee < o.distanceRestanteEstimee);
 }
 
 bool ObjetPQ::operator>(const ObjetPQ& o) const {
-    return (this->distanceEstimee > o.distanceEstimee);
+    return (this->distanceRestanteEstimee > o.distanceRestanteEstimee);
 }
 
 bool ObjetPQ::operator==(const ObjetPQ& o) const {
-    return (this->distanceEstimee == o.distanceEstimee);
+    return (this->distanceRestanteEstimee == o.distanceRestanteEstimee);
 }
 
 ObjetPQ::ObjetPQ() {
     this->distanceEstimee = numeric_limits<double>::infinity();
     ;
+    this->distanceRestanteEstimee = numeric_limits<double>::infinity();
+    ;
 }
 
-ObjetPQ::ObjetPQ(const Lieu* lieu, double distanceEstimee) {
+ObjetPQ::ObjetPQ(const Lieu* lieu, double distanceEstimee, double distanceRestanteEstimee) {
     this->distanceEstimee = distanceEstimee;
+    this->distanceRestanteEstimee = distanceRestanteEstimee;
     this->lieu = lieu;
     ;
 }

@@ -175,7 +175,7 @@ double Carte::calculerCheminEntreDeuxLieux(const Lieu* origine, const Lieu* dest
                                            std::list<string>& out_cheminRoutes) const {
     double distanceEstimee = origine->coor.distance(destination->coor);
     priority_queue<ObjetPQ, vector<ObjetPQ>, greater<ObjetPQ>> pq;
-    pq.push(ObjetPQ(origine, distanceEstimee));
+    pq.push(ObjetPQ(origine, distanceEstimee, distanceEstimee));
 
     const Lieu* lieuCourant = origine;
     // const Lieu* lieuPrecedent = origine;
@@ -202,7 +202,7 @@ double Carte::calculerCheminEntreDeuxLieux(const Lieu* origine, const Lieu* dest
 
         // On arrete de checker si on a deja un meilleur chemin
         if (pqObjetCourant.distanceEstimee > gScore[destination].value) {
-            break;
+            continue;
         }
 
         // Boucle a travers tous les voisins:
@@ -214,8 +214,9 @@ double Carte::calculerCheminEntreDeuxLieux(const Lieu* origine, const Lieu* dest
             double distanceCumul = gScore[lieuCourant].value + segmentCourant.longueur;
             if (distanceCumul < gScore[voisin].value) {
                 // Ajoute nouvel objet dans la queue prioritaire s'il est nouveau ou meilleur qu'avant
-                distanceEstimee = distanceCumul + segmentCourant.arrivee->coor.distance(destination->coor);
-                pq.push(ObjetPQ(voisin, distanceEstimee));
+                double distanceRestanteEstimee = segmentCourant.arrivee->coor.distance(destination->coor);
+                distanceEstimee = distanceCumul + distanceRestanteEstimee;
+                pq.push(ObjetPQ(voisin, distanceEstimee, distanceRestanteEstimee));
                 // Calcul des scores
                 precedent[voisin] = lieuCourant;
                 routePrecedente[voisin] = &(*iter);
