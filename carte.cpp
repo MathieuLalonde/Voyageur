@@ -226,8 +226,6 @@ double Carte::calculerCheminEntreDeuxLieux(const Lieu* origine, const Lieu* dest
         }
     }
 
-    // cout << "LOOPED: " << nb << endl;
-
     // Traverse precedent pour retrouver le trajet utilise:
     const Lieu* traceRoute = destination;
     out_cheminNoeuds.push_front(destination->nom);
