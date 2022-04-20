@@ -12,10 +12,15 @@
 #include <set>
 
 #include "lieu.h"
+// TODO: inclure carte.h non? mais ca compile pas si on fait ca..
 
-// TODO: rendre les trucs private si pertinent
 class Trajet {
    public:
+    bool operator>(const Trajet& objet) const;
+    bool operator<(const Trajet& objet) const;
+    bool operator==(const Trajet& objet) const;
+
+   private:
     const Lieu* depart;
     const Lieu* arrivee;
     double distanceEstimee;
@@ -23,11 +28,7 @@ class Trajet {
     std::list<string> out_cheminNoeuds;
     std::list<string> out_cheminRoutes;
 
-    bool operator>(const Trajet& objet) const;
-    bool operator<(const Trajet& objet) const;
-    bool operator==(const Trajet& objet) const;
-
-   private:
+    friend class Carte;
 };
 
 #endif

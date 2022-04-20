@@ -4,8 +4,8 @@
  *  Squelette pour le TP3
  */
 
-#ifndef CARTE_HEADER
-#define CARTE_HEADER
+#if !defined(__CARTE_H__)
+#define __CARTE_H__
 
 #include <assert.h>
 

@@ -10,6 +10,7 @@
 #include <string>
 
 #include "coordonnee.h"
+// TODO: inclure carte.h non? mais ca compile pas si on fait ca..
 
 using namespace std;
 
@@ -22,6 +23,7 @@ class Lieu {
     bool operator<(const Lieu& lieu) const;
     bool operator==(const Lieu& lieu) const;
 
+   private:
     class SegRoute;
 
     string nom;
@@ -42,7 +44,7 @@ class Lieu {
        private:
     };
 
-   private:
+    friend class Carte;
 };
 
 #endif

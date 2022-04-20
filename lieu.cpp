@@ -32,5 +32,4 @@ Lieu::Lieu() {
 Lieu::Lieu(string nom, Coordonnee coor) {
     this->nom = nom;
     this->coor = coor;
-    ;
 }

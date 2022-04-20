@@ -44,6 +44,7 @@ clean-tests:
 	rm -f *.txt
 	rm -f *.resultat
 	rm -f *.validation
+	rm -f Mapnik/*
 
 zip:
 	make clean

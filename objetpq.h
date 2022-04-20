@@ -11,56 +11,51 @@
 #include <iostream>
 
 #include "lieu.h"
+#include "carte.h"
 
 class ObjetPQ {
    public:
     ObjetPQ();
-    ObjetPQ(const Lieu* lieu, double distanceEstimee, double distanceRestanteEstimee);
+    ObjetPQ(const Lieu* lieu, double fScore, double distanceEstimee, double distanceRestanteEstimee);
     ~ObjetPQ();
 
     bool operator>(const ObjetPQ& objet) const;
     bool operator<(const ObjetPQ& objet) const;
     bool operator==(const ObjetPQ& objet) const;
 
+
+   private:
     double distanceRestanteEstimee;
     double distanceEstimee;
     const Lieu* lieu;
+    double fScore;
 
-   private:
-    double poidRestant = 0.1;
-    double poidFait = 1;
+    friend Carte;
 };
 
 bool ObjetPQ::operator<(const ObjetPQ& o) const {
-    double thisPoid = this->distanceRestanteEstimee * poidRestant + this->distanceEstimee * poidFait;
-    double otherPoid = o.distanceRestanteEstimee * poidRestant + o.distanceEstimee * poidFait;
-    return (thisPoid < otherPoid);
+    return (this->fScore < o.fScore);
 }
 
 bool ObjetPQ::operator>(const ObjetPQ& o) const {
-    double thisPoid = this->distanceRestanteEstimee * poidRestant + this->distanceEstimee * poidFait;
-    double otherPoid = o.distanceRestanteEstimee * poidRestant + o.distanceEstimee * poidFait;
-    return (thisPoid > otherPoid);
+    return (this->fScore > o.fScore);
 }
 
 bool ObjetPQ::operator==(const ObjetPQ& o) const {
-    double thisPoid = this->distanceRestanteEstimee * poidRestant + this->distanceEstimee * poidFait;
-    double otherPoid = o.distanceRestanteEstimee * poidRestant + o.distanceEstimee * poidFait;
-    return (thisPoid == otherPoid);
+    return (this->fScore == o.fScore);
 }
 
 ObjetPQ::ObjetPQ() {
+    this->fScore = numeric_limits<double>::infinity();
     this->distanceEstimee = numeric_limits<double>::infinity();
-    ;
     this->distanceRestanteEstimee = numeric_limits<double>::infinity();
-    ;
 }
 
-ObjetPQ::ObjetPQ(const Lieu* lieu, double distanceEstimee, double distanceRestanteEstimee) {
+ObjetPQ::ObjetPQ(const Lieu* lieu, double fScore, double distanceEstimee, double distanceRestanteEstimee) {
     this->distanceEstimee = distanceEstimee;
     this->distanceRestanteEstimee = distanceRestanteEstimee;
     this->lieu = lieu;
-    ;
+    this->fScore = fScore;
 }
 
 ObjetPQ::~ObjetPQ() {

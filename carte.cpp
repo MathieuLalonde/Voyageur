@@ -20,12 +20,10 @@ void Carte::ajouterLieu(const string& nomLieu, const Coordonnee& c) {
     lieux[nomLieu] = Lieu(nomLieu, c);
 }
 
-// TODO: serait possible de stocker une route sous plusieurs tailles et que l'algo favorise le chemin le plus long qui mene plus loin en premier? Aussi, reduire la carte pour les noeuds qui on juste 1/2 liens (qui ne sont pas des intersections)
 void Carte::ajouterRoute(const string& nomRoute, const list<string>& route) {
     list<string>::const_iterator iter = route.begin();
 
     Lieu* lieuDepart = &lieux[*iter];
-    // Lieu *lieuFin = &lieux[route.back()];
 
     for (long unsigned int i = 1; i < route.size(); i++) {
         // Incremente la liste, trouve le lieu d'arrivee
@@ -35,10 +33,6 @@ void Carte::ajouterRoute(const string& nomRoute, const list<string>& route) {
         // Ajoute le segment de route courrant et ses infos (le plus petit)
         Lieu::SegRoute nouveauSegment(nomRoute, lieuDepart, lieuArrivee);
         lieuDepart->voisins.push_back(nouveauSegment);
-
-        // // Ajoute un autoroute (le point courant jusqua la fin de la rue) WARNING! Not complete, requires storing mid nodes and extracting them for the answer.
-        // Lieu::SegRoute nouveauAutoroute(nomRoute, lieuDepart, lieuFin);
-        // lieuDepart->voisins.push_back(nouveauAutoroute);
 
         // Le lieu d'arrivee du segment courrant est le depart du prochain segment
         lieuDepart = lieuArrivee;
@@ -170,39 +164,34 @@ void Carte::calculMeilleurTrajet(const Lieu* lieuDepart,
         }
     }
 
-    // retourne distance du parcoours minimum et son parcours
+    // retourne distance du parcours minimum et son parcours via les pointers/refs passer en argument.
 }
 
 // Calcul trajet entre deux points sur les routes de la carte
 double Carte::calculerCheminEntreDeuxLieux(const Lieu* origine, const Lieu* destination,
                                            std::list<string>& out_cheminNoeuds,
                                            std::list<string>& out_cheminRoutes) const {
-    double distanceEstimee = origine->coor.distance(destination->coor);
     priority_queue<ObjetPQ, vector<ObjetPQ>, greater<ObjetPQ>> pq;
-    pq.push(ObjetPQ(origine, distanceEstimee, distanceEstimee));
+    double poidRestant = 0.1, poidFait = 1;
+
+    double distanceEstimee = origine->coor.distance(destination->coor);
+    pq.push(ObjetPQ(origine, distanceEstimee * poidRestant, distanceEstimee, distanceEstimee));
 
     const Lieu* lieuCourant = origine;
-    // const Lieu* lieuPrecedent = origine;
 
     // Plus court chemin pour arriver a un Lieu donne:
     map<const Lieu*, const Lieu*> precedent;
     map<const Lieu*, const Lieu::SegRoute*> routePrecedente;
     // Plus courte distance jusqu'a un Lieu donne:
     map<const Lieu*, Infini> gScore;
-    // Estime de la meilleure distance vers la destination en passant par un Lieu donne:
-    map<const Lieu*, Infini> fScore;
-
     gScore[lieuCourant].value = 0;
 
-    list<Lieu::SegRoute>::const_iterator iter;
-    // double nb = 0;
     // Tant qu'il y a des Lieux dans la queue, trouve le meilleur chemin vers la destination:
     while (!pq.empty()) {
+        // Stock et retire l'objet courant de la queue prioritaire:
         ObjetPQ pqObjetCourant = pq.top();
-        lieuCourant = pqObjetCourant.lieu;
-        // nb++;
-        // Retire le lieuCourant de la queue prioritaire:
         pq.pop();
+        lieuCourant = pqObjetCourant.lieu;
 
         // On arrete de checker si on a deja un meilleur chemin
         if (pqObjetCourant.distanceEstimee > gScore[destination].value) {
@@ -210,17 +199,22 @@ double Carte::calculerCheminEntreDeuxLieux(const Lieu* origine, const Lieu* dest
         }
 
         // Boucle a travers tous les voisins:
-        for (iter = lieuCourant->voisins.begin(); iter != lieuCourant->voisins.end(); ++iter) {
+        list<Lieu::SegRoute>::const_iterator iter;
+        for (iter = lieuCourant->voisins.begin(); iter != lieuCourant->voisins.end(); ++iter)
+        {
             Lieu::SegRoute segmentCourant = *iter;
             const Lieu* voisin = segmentCourant.arrivee;
-
-            // Calcule les distances cumulative et estimee:
             double distanceCumul = gScore[lieuCourant].value + segmentCourant.longueur;
+
+            // Calcule les distances cumulative et estimee, on ajoute dans la PQ les nouveaux score s'ils sont meilleurs
             if (distanceCumul < gScore[voisin].value) {
                 // Ajoute nouvel objet dans la queue prioritaire s'il est nouveau ou meilleur qu'avant
                 double distanceRestanteEstimee = segmentCourant.arrivee->coor.distance(destination->coor);
                 distanceEstimee = distanceCumul + distanceRestanteEstimee;
-                pq.push(ObjetPQ(voisin, distanceEstimee, distanceRestanteEstimee));
+                double fScore = distanceRestanteEstimee * poidRestant + distanceEstimee * poidFait;
+
+                pq.push(ObjetPQ(voisin, fScore, distanceEstimee, distanceRestanteEstimee));
+
                 // Calcul des scores
                 precedent[voisin] = lieuCourant;
                 routePrecedente[voisin] = &(*iter);
@@ -228,8 +222,6 @@ double Carte::calculerCheminEntreDeuxLieux(const Lieu* origine, const Lieu* dest
             }
         }
     }
-
-    // cout << "LOOPED: " << nb << endl;
 
     // Traverse precedent pour retrouver le trajet utilise:
     const Lieu* traceRoute = destination;
