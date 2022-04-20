@@ -36,7 +36,8 @@ class Carte {
                                         std::list<string>& out_cheminNoeuds,
                                         std::list<string>& out_cheminRoutes) const;
 
-    void calculMeilleurTrajet(const Lieu* lieuDepart,
+    void calculMeilleurTrajet(const Lieu* lieuOrigine,
+                              const Lieu* lieuDepart,
                               map<const Lieu*, set<Trajet*>> trajetsPossibles,
                               list<Trajet*> trajetsParcourus,
                               double distanceParcourue,

@@ -81,7 +81,7 @@ double Carte::calculerTrajet(const string& nomOrigine, const set<string>& destin
     double distanceParcourMin = numeric_limits<double>::infinity();
 
     // Calcule toutes les permutations avec ces chiffres-la:
-    calculMeilleurTrajet(lieuOrigine, trajetsPossibles, trajetsParcourus, distanceParcourue, toursRestants,
+    calculMeilleurTrajet(lieuOrigine, lieuOrigine, trajetsPossibles, trajetsParcourus, distanceParcourue, toursRestants,
                          trajetsParcourMin, distanceParcourMin);
 
     // Recupere et assemble les directives de parcours:
@@ -106,7 +106,8 @@ double Carte::calculerTrajet(const string& nomOrigine, const set<string>& destin
 }
 
 // Calcul recursif des meilleurs combinaisons de trajets
-void Carte::calculMeilleurTrajet(const Lieu* lieuDepart,
+void Carte::calculMeilleurTrajet(const Lieu* lieuOrigine,
+                                 const Lieu* lieuDepart,
                                  map<const Lieu*, set<Trajet*>> trajetsPossibles,
                                  list<Trajet*> trajetsParcourus,
                                  double distanceParcourue,
@@ -154,8 +155,10 @@ void Carte::calculMeilleurTrajet(const Lieu* lieuDepart,
                 double nouvelleDistanceParcourue = distanceParcourue;
                 nouvelleDistanceParcourue += voisin->distanceReele;
 
-                if (distanceParcourue < distanceParcourMin) {
-                    calculMeilleurTrajet(voisin->arrivee, trajetsPossibles, nouvelleListe, nouvelleDistanceParcourue,
+                // On continue a checker seulement si parcours actuel+distance vol d'oiseau peut battre le choix courant
+                double distanceRetour = lieuOrigine->coor.distance(voisin->arrivee->coor);
+                if ((distanceParcourue + distanceRetour) < distanceParcourMin) {
+                    calculMeilleurTrajet(lieuOrigine, voisin->arrivee, trajetsPossibles, nouvelleListe, nouvelleDistanceParcourue,
                                          toursRestants - 1, trajetsParcourMin, distanceParcourMin);
                 } else {
                     break;
