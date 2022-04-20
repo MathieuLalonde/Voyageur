@@ -121,6 +121,7 @@ void Carte::calculMeilleurTrajet(const Lieu* lieuOrigine,
         return;
     }
 
+    // Cas du retour a la maison
     if (toursRestants == 0) {
         const Lieu* origine = (*trajetsParcourus.begin())->depart;
 
@@ -143,6 +144,7 @@ void Carte::calculMeilleurTrajet(const Lieu* lieuOrigine,
         }
 
     } else {
+        // Cas de se rendre a une destination
         for (Trajet* voisin : trajetsPossibles[lieuDepart]) {
             bool dejaVisite = false;
             for (Trajet* trajet : trajetsParcourus) {
