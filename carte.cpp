@@ -154,19 +154,27 @@ void Carte::calculMeilleurTrajet(const Lieu* lieuOrigine,
                 }
             }
             if (!dejaVisite) {
+                double distanceRetour = lieuOrigine->coor.distance(voisin->arrivee->coor);
+
+                // On calcul la vrai distance si necessaire
                 if (voisin->distanceReele < 0) {
-                    voisin->distanceReele = calculerCheminEntreDeuxLieux(voisin->depart, voisin->arrivee,
-                                                                         voisin->out_cheminNoeuds,
-                                                                         voisin->out_cheminRoutes);
+                    // On skip si ca vaut pas la peine de checker
+                    double estimation = distanceParcourue + voisin->distanceEstimee + distanceRetour;
+                    if (estimation > distanceParcourMin)
+                    {
+                        break;
+                    }
+
+                    voisin->distanceReele = calculerCheminEntreDeuxLieux(voisin->depart, voisin->arrivee, voisin->out_cheminNoeuds,  voisin->out_cheminRoutes);
                 }
-                list<Trajet*> nouvelleListe = trajetsParcourus;
-                nouvelleListe.push_back(voisin);
+
                 double nouvelleDistanceParcourue = distanceParcourue;
                 nouvelleDistanceParcourue += voisin->distanceReele;
 
                 // On continue a checker seulement si parcours actuel+distance vol d'oiseau pour le retour peut battre le choix courant
-                double distanceRetour = lieuOrigine->coor.distance(voisin->arrivee->coor);
                 if ((nouvelleDistanceParcourue + distanceRetour) < distanceParcourMin) {
+                    list<Trajet*> nouvelleListe = trajetsParcourus;
+                    nouvelleListe.push_back(voisin);
                     calculMeilleurTrajet(lieuOrigine, voisin->arrivee, trajetsPossibles, nouvelleListe, nouvelleDistanceParcourue,
                                          toursRestants - 1, trajetsParcourMin, distanceParcourMin);
                 } else {
