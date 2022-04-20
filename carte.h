@@ -69,7 +69,7 @@ class Carte {
      * @param trajetsParcourus - Trajets parcourus jusqu'a maintenant
      * @param distanceParcourue - Distance parcourue jusqu'a maintenant
      * @param toursRetants - Destinations restantes a calculer (0=retour a l'origine)
-     * @param trajetsParcourMin - Distance minimal pour un trajet de cette recursion
+     * @param trajetsParcourMin - Trajet du parcours optimal jusqu'a maintenant
      * @param distanceParcourMin - Distance totale optimale jusqu'a maintenant
      */
     void calculMeilleurTrajet(const Lieu* lieuOrigine,
