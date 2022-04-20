@@ -164,9 +164,9 @@ void Carte::calculMeilleurTrajet(const Lieu* lieuOrigine,
                 double nouvelleDistanceParcourue = distanceParcourue;
                 nouvelleDistanceParcourue += voisin->distanceReele;
 
-                // On continue a checker seulement si parcours actuel+distance vol d'oiseau peut battre le choix courant
+                // On continue a checker seulement si parcours actuel+distance vol d'oiseau pour le retour peut battre le choix courant
                 double distanceRetour = lieuOrigine->coor.distance(voisin->arrivee->coor);
-                if ((distanceParcourue + distanceRetour) < distanceParcourMin) {
+                if ((nouvelleDistanceParcourue + distanceRetour) < distanceParcourMin) {
                     calculMeilleurTrajet(lieuOrigine, voisin->arrivee, trajetsPossibles, nouvelleListe, nouvelleDistanceParcourue,
                                          toursRestants - 1, trajetsParcourMin, distanceParcourMin);
                 } else {
