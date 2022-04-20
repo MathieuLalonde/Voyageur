@@ -12,7 +12,10 @@
 
 #include "lieu.h"
 #include "carte.h"
-
+/**
+ * Represente un objet dans une file prioritaire (utilisation faite par Carte)
+ * L'objet contient les valeurs d'un objet que A* utilise et l'ordonnement se fait par score d'importance (fScore)
+ */
 class ObjetPQ {
    public:
     ObjetPQ();

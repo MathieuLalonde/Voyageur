@@ -19,6 +19,6 @@
 
 
 # TODO:
-- Optimisation pour 1 (3pt) & 2+ (1pt bonus)
-- Rapports (output de evaluer.sh) + docstring + clean up code/commentaire
+- Optimisation pour tests F: 47/55
+- Update rapport (output de evaluer.sh) + clean up code/commentaire
 - Validation sur labunix avant remise

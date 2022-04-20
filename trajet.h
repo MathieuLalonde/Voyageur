@@ -14,6 +14,10 @@
 #include "lieu.h"
 // TODO: inclure carte.h non? mais ca compile pas si on fait ca..
 
+/**
+ * Represente un parcours complet, comme un <<autoroute>>:
+ * Un point de depart et d'arrive passant par une liste donnee et etant d'une certaine longeur.
+ */
 class Trajet {
    public:
     bool operator>(const Trajet& objet) const;

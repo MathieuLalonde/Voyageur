@@ -14,6 +14,9 @@
 
 using namespace std;
 
+/**
+ * Represente un point sur la Carte
+ */
 class Lieu {
    public:
     Lieu();
@@ -28,10 +31,12 @@ class Lieu {
 
     string nom;
     Coordonnee coor;
+    /** Liste de segment vers lesquels on peut se rendre a partir de se point */
     list<SegRoute> voisins;
 
     mutable bool isVisited = false;
 
+    /** Represente un segment de route vers un autre Lieu */
     class SegRoute {
        public:
         SegRoute();
