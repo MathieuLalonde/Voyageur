@@ -121,6 +121,7 @@ void Carte::calculMeilleurTrajet(const Lieu* lieuOrigine,
         return;
     }
 
+    // Quand on est rendu a faire le retour.
     if (toursRestants == 0) {
         const Lieu* origine = (*trajetsParcourus.begin())->depart;
 
@@ -143,7 +144,9 @@ void Carte::calculMeilleurTrajet(const Lieu* lieuOrigine,
         }
 
     } else {
-        for (Trajet* voisin : trajetsPossibles[lieuDepart]) {
+        // Quand on doit trouver vers une destination
+        // TODO: cette partie est le bottle neck. faudrait une PQ ou qqch qui priorise la bonne combinaison, ou skip une combinaison au complet si on detecte que cest nul. sinon, faudrait mieux calculer le dejaVisite pour eviter de looper autant
+
             bool dejaVisite = false;
             for (Trajet* trajet : trajetsParcourus) {
                 if (voisin->arrivee == trajet->arrivee || voisin->arrivee == trajet->depart) {
@@ -157,15 +160,13 @@ void Carte::calculMeilleurTrajet(const Lieu* lieuOrigine,
                                                                          voisin->out_cheminNoeuds,
                                                                          voisin->out_cheminRoutes);
                 }
-                list<Trajet*> nouvelleListe = trajetsParcourus;
-                nouvelleListe.push_back(voisin);
-                double nouvelleDistanceParcourue = distanceParcourue;
-                nouvelleDistanceParcourue += voisin->distanceReele;
+                trajetsParcourus.push_back(voisin);
+                distanceParcourue += voisin->distanceReele;
 
                 // On continue a checker seulement si parcours actuel+distance vol d'oiseau peut battre le choix courant
                 double distanceRetour = lieuOrigine->coor.distance(voisin->arrivee->coor);
                 if ((distanceParcourue + distanceRetour) < distanceParcourMin) {
-                    calculMeilleurTrajet(lieuOrigine, voisin->arrivee, trajetsPossibles, nouvelleListe, nouvelleDistanceParcourue,
+                    calculMeilleurTrajet(lieuOrigine, voisin->arrivee, trajetsPossibles, trajetsParcourus, distanceParcourue,
                                          toursRestants - 1, trajetsParcourMin, distanceParcourMin);
                 } else {
                     break;
