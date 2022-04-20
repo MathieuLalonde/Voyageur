@@ -114,6 +114,13 @@ void Carte::calculMeilleurTrajet(const Lieu* lieuOrigine,
                                  int toursRestants,
                                  list<Trajet*>& trajetsParcourMin,
                                  double& distanceParcourMin) const {
+
+    // Au cas que la distance min est nouvelle
+    double distanceRetourDebut = lieuOrigine->coor.distance(lieuDepart->coor);
+    if ((distanceRetourDebut + distanceParcourue) > distanceParcourMin){
+        return;
+    }
+
     if (toursRestants == 0) {
         const Lieu* origine = (*trajetsParcourus.begin())->depart;
 
