@@ -39,7 +39,7 @@ class Carte {
     void calculMeilleurTrajet(const Lieu* lieuOrigine,
                               const Lieu* lieuDepart,
                               map<const Lieu*, set<Trajet*>> trajetsPossibles,
-                              list<Trajet*> trajetsParcourus,
+                              list<Trajet*>& trajetsParcourus,
                               double distanceParcourue,
                               int toursRetants,
                               list<Trajet*>& trajetsParcourMin,

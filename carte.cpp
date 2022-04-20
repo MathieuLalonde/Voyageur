@@ -109,7 +109,7 @@ double Carte::calculerTrajet(const string& nomOrigine, const set<string>& destin
 void Carte::calculMeilleurTrajet(const Lieu* lieuOrigine,
                                  const Lieu* lieuDepart,
                                  map<const Lieu*, set<Trajet*>> trajetsPossibles,
-                                 list<Trajet*> trajetsParcourus,
+                                 list<Trajet*>& trajetsParcourus,
                                  double distanceParcourue,
                                  int toursRestants,
                                  list<Trajet*>& trajetsParcourMin,
